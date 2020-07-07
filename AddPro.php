@@ -22,7 +22,12 @@ require("conn.php")
     <p>First Name : <br><input type="text" name="Fname"></p>
     <p>Last Name : <br><input type="text" name="lname"></p>
     <p>Student Code : <br><input type="text" name="Stu_ID"></p>
-    <p>Branch : <br><input type="text" name="Branch"></p>
+    <p>Branch : <select name="Branch" id="">
+        <option value="1">วิศวกรรมเครื่องกล</option>
+        <option value="2">วิศกรรมไฟฟ้า</option>
+        <option value="3">วิศวกรรมโยธา</option>
+        <option value="4">วิศวกรรมอุตสาหการ</option>
+    </select></p>
     <p>Project Name : <br><input type="text" name="Proname"></p>
     <p>File Project : <input type="file" name="Pro_file"> 
     Year : <input type="text" name="year"></p>
@@ -30,6 +35,7 @@ require("conn.php")
     <button type="submit" name="Submit">Submit</button>
     
     </form>
+    <a href="ShowPro.php">Show</a>
 </div>
 </body>
 </html>

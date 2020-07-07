@@ -16,22 +16,38 @@ if(isset($_REQUEST['Proname'])) $Proname= $_REQUEST['Proname'];
 if(isset($_REQUEST['year'])) $year= $_REQUEST['year'];
 
 
+// รับ File ที่ส่งมา
+$target_file = basename($_FILES["Pro_file"]["name"]);
+
+
 // path ที่ต้องการเก็บ File
-$pathFile = "Project/";
+$pathFile = "UploadPro/";
 
-$target_file = $pathFile . basename($_FILES["Pro_file"]["name"]);
-
+// นามสกุลของไฟส์
 $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
+$newFilename = $pathFile. 'Project_'.uniqid().".".$FileType;
+
+echo $newFilename;
+
+
+
 if ($FileType == "pdf" || $FileType == "docx"){
-  if (move_uploaded_file($_FILES["Pro_file"]["tmp_name"], $target_file)) {
-    echo "The file  has been uploaded.";
-    $sql = "INSERT INTO student_info (f_name, l_name, student_code, branch, pro_name, year) 
-        Value ('$Fname', '$Lname', '$Stu_ID', '$branch', '$Proname', '$year')";
+  if (move_uploaded_file($_FILES["Pro_file"]["tmp_name"], $newFilename)) {
+
+    $sql = "INSERT INTO student_info (f_name, l_name, student_code, pro_name, year) 
+        Value ('$Fname', '$Lname', '$Stu_ID', '$Proname', '$year')";
+
+    $sql_Pro = "INSERT INTO pro_name (pro_name, file_pro, branch_NO) 
+    Value ('$Proname', '$newFilename', '$branch')";
 
     if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
-  } 
+       if($conn->query($sql_Pro) === TRUE) {
+       
+          echo "successfully Pro Name";
+      }
+        echo "successfully  Student";
+    }
     else {
       echo "Error: " . $sql . "<br>" . $conn->error;
     }
