@@ -12,11 +12,12 @@ require("conn.php")
         .inputPro{
             border: black solid 2px;
             width: 600px;
-            margin: 10% 33%;
+            margin: 5% 33%;
         }
     </style>
 </head>
 <body>
+        <h1 style="text-align: center;"> Upload Project </h1>
 <div class="inputPro">
     <form action="Upload.php" method="POST" enctype="multipart/form-data">
     <p>First Name : <br><input type="text" name="Fname"></p>

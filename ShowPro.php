@@ -14,16 +14,18 @@
     <div>
     <table border="1px">
         <tr>
-                <th>ชื่อผู้จัดทำ</th>
                 <th>ชื่อโปรเจค</th>
                 <th>สาขา</th>
                 <th>ปีการศึกษา</th>
                 <th>View</th>
+                <th>download</th>
         </tr>
+        <a href="downloads/"></a>
         <?php
 
-        $sql = "SELECT * FROM ((`pro_name` INNER JOIN student_info ON pro_name.pro_name = student_info.pro_name)
-        INNER JOIN branch ON pro_name.branch_NO = branch.branch_NO)";
+        $sql = "SELECT * FROM project INNER JOIN branch ON project.branch_ON = branch.branch_NO";
+
+
     
         $result = mysqli_query($conn,$sql);
 
@@ -31,18 +33,18 @@
             while ($row = mysqli_fetch_assoc($result)){
                 echo "<form action=''>";
                 echo "<tr>";
-                echo "<th>". $row["f_name"] ." ". $row["l_name"] ."</th>";
-                echo "<th>". $row["pro_name"] ."</th>";
+                echo "<th>". $row["Pro_name"] ."</th>";
                 echo "<th>". $row["branch_name"] ."</th>";
-                echo "<th>". $row["year"] ."</th>";
-                echo "<th><a href=".$row["file_pro"].">รายละเอียด</a></th>";
+                echo "<th>". $row["Pro_year"] ."</th>";
+                echo "<th><a href=".$row['file_pro']." >รายละเอียด</a></th>";
+
                 echo "</tr>";
                 echo "</form>";
             }}
 
         ?>
     </table></div>
-    <a href="AddPro.php">ADd</a>
+    <a href="AddProject.php">ADd</a>
     
 </body>
 </html>

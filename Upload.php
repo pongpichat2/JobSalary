@@ -28,10 +28,6 @@ $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
 $newFilename = $pathFile. 'Project_'.uniqid().".".$FileType;
 
-echo $newFilename;
-
-
-
 if ($FileType == "pdf" || $FileType == "docx"){
   if (move_uploaded_file($_FILES["Pro_file"]["tmp_name"], $newFilename)) {
 
@@ -41,18 +37,8 @@ if ($FileType == "pdf" || $FileType == "docx"){
     $sql_Pro = "INSERT INTO pro_name (pro_name, file_pro, branch_NO) 
     Value ('$Proname', '$newFilename', '$branch')";
 
-    if ($conn->query($sql) === TRUE) {
-       if($conn->query($sql_Pro) === TRUE) {
-       
-          echo "successfully Pro Name";
-      }
-        echo "successfully  Student";
-    }
-    else {
-      echo "Error: " . $sql . "<br>" . $conn->error;
-    }
-  
-  $conn->close();
+    $result = mysqli_query($conn,$sql);
+    $result1 = mysqli_query($conn,$sql_Pro);
 
 
   } 
