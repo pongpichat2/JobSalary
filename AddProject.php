@@ -1,5 +1,8 @@
 <?php
-require("conn.php")
+require("conn.php");
+session_start();
+
+echo $_SESSION['Mem_code'];
 
 ?>
 <!DOCTYPE html>
