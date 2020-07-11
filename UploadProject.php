@@ -3,16 +3,15 @@ require("conn.php");
 session_start();
 
 $MemCode = $_SESSION['Mem_code'];
-
 $Proname = $_POST["Proname"];
 $stu_code1 = $_POST["Stu_code1"];
-
 $stu_code2 = $_POST["Stu_code2"];
-
 $Branch = $_POST["Branch"];
 $year = $_POST["year"];
 $Abstract = $_POST["Abstract"];
 $Pro_teacher = $_POST["Pro_teacher"];
+
+$type = "Upload";
 
 
 
@@ -31,9 +30,13 @@ if ($FileType == "pdf" || $FileType == "docx"){
   
       $sql = "INSERT INTO project (Pro_name, Mem_Code, Stu_code, Stu_code2, Abstract, file_pro, Pro_year, Pro_teacher, branch_NO) 
         Value ('$Proname', '$MemCode', '$stu_code1', '$stu_code2', '$Abstract', '$newFilename', '$year', '$Pro_teacher', $Branch)";
-  
-      
-    $result = mysqli_query($conn,$sql);
+
+      $sql_Log = "INSERT INTO log_pro (Pro_name, type) Value ('$Proname', '$type')";
+
+      $result = mysqli_query($conn,$sql);
+      $result2 = mysqli_query($conn,$sql_Log);
+
+      header("Location:EditProject.php");
 
     } 
     else {

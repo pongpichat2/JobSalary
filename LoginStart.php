@@ -26,7 +26,7 @@ $Password = "";
             header("Location:AddProject.php");
         }
         else{
-            header("Location:ShowProject.php");
+            header("Location:ShowPro.php");
         }
 
     }

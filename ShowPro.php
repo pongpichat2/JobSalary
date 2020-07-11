@@ -46,7 +46,7 @@
 
         ?>
     </table></div>
-    <a href="AddProject.php">ADD</a>
+
     <a href="ShowLog.php">ShowLog</a>
     
 </body>

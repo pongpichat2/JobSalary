@@ -21,19 +21,15 @@ echo $_SESSION['Mem_code'];
     </style>
 </head>
 <body>
+    <a href="EditProject.php">Edit Project</a>
         <h1 style="text-align: center;"> Upload Project </h1>
 <div class="inputPro">
     <form action="UploadProject.php" method="POST" enctype="multipart/form-data">
     <p>Project Name : <br><input type="text" name="Proname"></p>
     <p>คณะผู้จัดทำ  
-        <p>คนที่ 1 : <input type="text" name="Stu_code1" placeholder="รหัสนิสิต">
-        <!-- <input type="text" name="fname1" placeholder="ชื่อ"> 
-        <input type="text" name="lname1" placeholder="นามสกุล"></p> --> </p>
+        <p>คนที่ 1 : <input type="text" name="Stu_code1" placeholder="รหัสนิสิต"></p>
    
-        <p>คนที่ 2 : <input type="text" name="Stu_code2" placeholder="รหัสนิสิต">
-        <!-- <input type="text" name="fname2" placeholder="ชื่อ"> 
-        <input type="text" name="lname2" placeholder="นามสกุล"></p> --></p>
-    
+        <p>คนที่ 2 : <input type="text" name="Stu_code2" placeholder="รหัสนิสิต"></p>
     </p>
     <p>Branch : <select name="Branch" id="">
         <option value="1">วิศวกรรมเครื่องกล</option>
@@ -52,6 +48,6 @@ echo $_SESSION['Mem_code'];
     
     </form>
    
-</div> <a href="ShowPro.php">Show</a>
+</div> 
 </body>
 </html>

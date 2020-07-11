@@ -1,8 +1,8 @@
 <?php
 require("conn.php");
 
-$time = time();
-echo date('m/d/Y H:i:s', $time);
+// $time = time();
+// echo date('m/d/Y H:i:s', $time);
 
 
 
