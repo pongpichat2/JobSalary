@@ -2,7 +2,7 @@
 require("conn.php");
 session_start();
 
-echo $_SESSION['Mem_code'];
+// echo $_SESSION['Mem_code'];
 
 ?>
 <!DOCTYPE html>
@@ -21,7 +21,8 @@ echo $_SESSION['Mem_code'];
     </style>
 </head>
 <body>
-    <a href="EditProject.php">Edit Project</a>
+    <a href="EditProject.php">Edit Project</a><br>
+    <a href="ShowPro.php">ShowProject</a>
         <h1 style="text-align: center;"> Upload Project </h1>
 <div class="inputPro">
     <form action="UploadProject.php" method="POST" enctype="multipart/form-data">

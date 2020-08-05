@@ -33,12 +33,14 @@ if(isset($_FILES["Pro_file"]["name"])) $filePro = $_FILES["Pro_file"]["name"];
     // echo "$Abstract <br>";
     // echo $filePro;
 
+    $target_file = basename($filePro);
+
 
     // path ที่ต้องการเก็บ File
     $pathFile = "UploadPro/";
 
     // นามสกุลของไฟส์
-    $FileType = strtolower(pathinfo($filePro,PATHINFO_EXTENSION));
+    $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
     // ตั้งชื่อไฟส์ใหม่
     $newFilename = $pathFile. $Proname."_".uniqid().".".$FileType;
