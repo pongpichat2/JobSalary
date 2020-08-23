@@ -3,53 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
-    <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet">
+    <!-- calendar -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <title>Document</title>
 </head>
 <style>
     .FormAddRe{
         width: 1000px;
-        height: 700px;
+        height: 900px;
         background: none;
         border: 2px solid black;
     }
 </style>
 <body>
+    <a href="edit.php">edit page</a>
     <div class="FormAddRe">
-    <form action="" method="get">
-        <p>ชื่อหัวหน้าโครงงาน <br> <input type="text" placeholder="หัวหน้าโครงงาน"></p>
+    <form action="insertResearch.php" method="POST">
+        <p>ชื่อหัวหน้าโครงงาน <br> <input type="text" name="Leader_Re" placeholder="หัวหน้าโครงงาน"></p>
 
         <div>
-            <p><input type="checkbox" name="Member_Re" id="AddMember_Re" value="Me" onclick="ShowAddMem()" > มีผู้ร่วมวิจัย
-            <input type="checkbox" name="Member_Re" id="AddMember_Re2"  value="Non" > ไม่มีผู้ร่วมวิจัย</p>
+        <p><input type="checkbox" class="checkbox" name="TypeMember_Re" id="AddMember_Re" value="1" > มีผู้ร่วมวิจัย
+            <input type="checkbox" class="checkbox" name="TypeMember_Re" id="AddMember_Re2"  value="2" > ไม่มีผู้ร่วมวิจัย</p>
 
             
                 <p id="ShowAddMember_Re" style="display:none">
-                <input type="text" name="" id="" placeholder="ผู้ร่วมวิจัยคนที่ 1">
-                <input type="text" name="" id="" placeholder="ผู้ร่วมวิจัยคนที่ 2">
-                <input type="text" name="" id="" placeholder="ผู้ร่วมวิจัยคนที่ 3">
+                <input type="text" name="Member[]" id="" placeholder="ผู้ร่วมวิจัยคนที่ 1">
+                <input type="text" name="Member[]" id="" placeholder="ผู้ร่วมวิจัยคนที่ 2">
+                <input type="text" name="Member[]" id="" placeholder="ผู้ร่วมวิจัยคนที่ 3">
                 </p>
 
         </div>
 
         <div>
         
-            ชื่อโครงงาน  <br> ภาษาไทย <input type="text" name="" id="" placeholder="Thailand"> ภาษาอังกฤษ <input type="text" name="" id="" placeholder="English">
-            <p> ประเภทงานวิจัย : <Select id="Type_Re" onchange="yesCheck(this);">
-                <option value="">การฝึกอบรม สัมนา ออภิปรายและบรรยาย</option>
-                <option value="">การค้นคว้า สำรวจ วิเคราะห์ ทดสอบและตรวจสอบ</option>
-                <option value="">การให้คำปรึกษาทางวิชาการและวิชาชีพ</option>
-                <option value="">การให้บริการเกี่ยวกับหลักสูตรการเรียนการสอน</option>
-                <option value="">การให้บริการทางด้านเทคโนโลยีการศึกษา</option>
-                <option value="">การให้บริการวิจัย</option>
-                <option value="">การวางระบบ ออกแบบและประดิษฐ์</option>
-                <option value="">การเขียนทางวิชาการและงานแปล</option>
-                <option value="">การให้บริการสารสนเทศ</option>
+        ชื่อโครงงาน  <br> ภาษาไทย <input type="text"  id="" placeholder="Thailand" name="NameRe_TH"> ภาษาอังกฤษ <input type="text" name="NameRe_Eng" id="" placeholder="English">
+            <p> ประเภทงานวิจัย : <Select id="Type_Re" name ="Type_Re" onchange="yesCheck(this);">
+                <option value="การฝึกอบรม/สัมนา/อภิปรายและบรรยาย">การฝึกอบรม/สัมนา/อภิปรายและบรรยาย</option>
+                <option value="การค้นคว้า/สำรวจ/วิเคราะห์/ทดสอบและตรวจสอบ">การค้นคว้า/สำรวจ/วิเคราะห์/ทดสอบและตรวจสอบ</option>
+                <option value="การให้คำปรึกษาทางวิชาการและวิชาชีพ">การให้คำปรึกษาทางวิชาการและวิชาชีพ</option>
+                <option value="การให้บริการเกี่ยวกับหลักสูตรการเรียนการสอน">การให้บริการเกี่ยวกับหลักสูตรการเรียนการสอน</option>
+                <option value="การให้บริการทางด้านเทคโนโลยีการศึกษา">การให้บริการทางด้านเทคโนโลยีการศึกษา</option>
+                <option value="การให้บริการวิจัย">การให้บริการวิจัย</option>
+                <option value="การวางระบบ/ออกแบบและประดิษฐ์">การวางระบบ/ออกแบบและประดิษฐ์</option>
+                <option value="การเขียนทางวิชาการและงานแปล">การเขียนทางวิชาการและงานแปล</option>
+                <option value="การให้บริการสารสนเทศ">การให้บริการสารสนเทศ</option>
                 <option value="Other">อื่น ๆ (ระบุ)</option>
                 
             </Select>
-            <p id= "TypeRe_Other" style="display: none;"> <input type="text" name="" id="" placeholder="โปรดระบุประเภทงานวิจัย"></p>
+            <p id= "TypeRe_Other" style="display: none;"> <input type="text" name="Type_Re_Other" id="" placeholder="โปรดระบุประเภทงานวิจัย"></p>
             </p>
         </div>
 
@@ -57,30 +62,37 @@
         <fieldset class="fieldset">
             <legend> <p>แหล่งเงินทุน</p></legend>
 
-            <p><input type="checkbox" name="" id="Capital_Sidein" onclick="Cap_Sidein()" >แหล่งทุนภายใน
-            <div id="ShowCapital_in" style="display: none;"> <input type="text" name="" id="" placeholder="โปรดกรอกหน่วยงานภายใน"></div>
+            <p><input type="checkbox" class="checkbox1" name="FundsType" id="Capital_Sidein" value="1">แหล่งทุนภายใน
+            <div id="ShowCapital_in"  style="display: none;"> <input type="text" name="Agency_Sidein_Name" id="" placeholder="โปรดกรอกหน่วยงานภายใน"></div>
             </p>
 
             <p>
-            <input type="checkbox" name="" id="Capital_Sideout" onclick="Cap_Sideout()">แหล่งทุนภายนอก
+            <input type="checkbox" class="checkbox1" name="FundsType" id="Capital_Sideout" value="2">แหล่งทุนภายนอก</p>
             <div id="ShowCapital_out" style="display: none;">
 
                 <div>
-                    <input type="checkbox" name="" id="Cap_Reseach" onclick="Detil_TypeRe()"> งานวิจัย
+                    <input type="checkbox" class="checkbox2" name="Type_funds_out" id="Cap_Reseach" value = "1"> งานวิจัย
 
-                    <div id="ShowDetil_TypeRe" style="display: none; ">   
-                    <select name="" id="" onchange="CheckCap_Out(this);">
-                    <option value="">แผ่นดิน</option>
+                    <div id="ShowDetil_TypeRe" style="display: none; ">
+                    <select name="Agency_out" id="" onchange="CheckCap_Out(this);">
+                    <option value="แผ่นดิน">แผ่นดิน</option>
+                    <option value="รายได้">รายได้</option>
+                    <option value="รายได้คณะ">รายได้คณะ</option>
+                    <option value="สวทช.">สวทช.</option>
+                    <option value="สกสว.">สกสว.</option>
+                    <option value="วช.">วช.</option>
+                    <option value="อว.">อว.</option>
+                    <option value="อวน.">อวน.</option>
                     <option value="Other">อื่น ๆ </option>
                     </select>
-                    <p id= "Re_CapOut" style="display: none;"> <input type="text" name="" id="" placeholder="โปรดระบุ"></p>
+                    <p id= "Re_CapOut" style="display: none;"> <input type="text" name="Agency_out_other" id="" placeholder="โปรดระบุ"></p>
 
                     </div>
                 </div>
 
                 <div>
-                    <input type="checkbox" name="" id="BoxService_Aca" onclick="Service_Aca()"> บริการวิชาการ
-                    <p id= "ShowService_Aca" style="display: none;"> <input type="text" name="" id="" placeholder="โปรดระบุ"></p>
+                <input type="checkbox" class="checkbox2" name="Type_funds_out" id="BoxService_Aca"  value="2"> บริการวิชาการ
+                    <p id= "ShowService_Aca" style="display: none;"> <input type="text" name="Agency_out_service" id="" placeholder="โปรดระบุ"></p>
                 </div>
 
             </div>
@@ -89,17 +101,47 @@
         </fieldset>
         <!-- Stop แหล่งเงินทุน -->
 
-        <div> งบประมาณ <input type="text"> /บาท </div>
+        <div> งบประมาณ <input type="text" name="Bugget"> /บาท </div>
 
         <div>ระยะเวลาในการดำเนิน 
-        <input id="datepicker" type="text">
+            <input type="text" name="datefilter" value="" >
 
-        <script>
-            var datepicker = new ej.calendars.DatePicker({ width: "255px" });
-            datepicker.appendTo('#datepicker');
-        </script>
+        </div><br>
 
-    
+        <div>
+            ขอนุมัติดำเนินโครงการ <select name="approve_Type" id="">
+            <option value="1">เสนอโครงการ</option>
+            <option value="2">เซ็นสัญญา</option>
+            <option value="3">ขออนุมัติดำเนินโครงการ</option>
+            <option value="4">ขออนุมัติเบิกเงิน(รอบ1)</option>
+            <option value="5">ขออนุมัติเบิกเงิน(รอบ2)</option>
+            <option value="6">ขออนุมัติเบิกเงิน(รอบ3)</option>
+            <option value="7">ขออนุมัติขยายเวลา</option>
+            <option value="8">สิ้นสุดโครงการ</option>
+            </select>
+            <div>ระยะเวลา 
+                <input type="text" name="Time_period" value="" >
+            </div>
+        </div>
+
+        <div>
+            <input type="checkbox" class="checkbox3" name="Published" id="Working" value="1"  >มีผลงานตีพิมพ์
+            <input type="checkbox" class="checkbox3" name="Published" id="Working2"  value="2" >ไม่มีผลงานตีพิมพ์
+
+            <div id="ShowWorking" style="display: none;">
+                <fieldset><legend><p>ผลงานตีพิมพ์</p></legend>
+                ประเภทของงานตีพิมพ์ :
+                    <input type="checkbox" class="checkbox4" name="type_Published_inter" id="Inter" value="1"> วารสารระดับชาติ
+                    <input type="checkbox" class="checkbox4" name="type_Published_inter" id="Inter2" value="2"> วารสารระดับนานาชาติ <br>
+
+                ว/ด/ป ที่เผยแพร่ <input type="text" name="DateDocument" value=""><br>
+                
+                <div>
+                    Volome : <input type="text" placeholder="No." name="Volome"> No. ISSUE : <input type="text" placeholder="No. ISSUE" name="ISSUE"> 
+                    หน้าที่พิมพ์ :  <input type="text" name="Page_Published" placeholder="หน้าที่พิมพ์">
+                </div>
+                </fieldset>
+            </div>
         </div>
         <button type="submit">Save</button>
     </form>
@@ -112,20 +154,112 @@
     
 </body>
 <script>
-            
+        // checkbox code ผุ้ร่วมวิจัย 
+        $('.checkbox').click(function(){
+            $('.checkbox').each(function(){
+                $(this).prop('checked', false); 
+            }); 
+            $(this).prop('checked', true);
+        });
+        $('.checkbox1').click(function(){
+            $('.checkbox1').each(function(){
+                $(this).prop('checked', false); 
+            }); 
+            $(this).prop('checked', true);
+        });
+        $('.checkbox2').click(function(){
+            $('.checkbox2').each(function(){
+                $(this).prop('checked', false); 
+            }); 
+            $(this).prop('checked', true);
+        });
+        $('.checkbox3').click(function(){
+            $('.checkbox3').each(function(){
+                $(this).prop('checked', false); 
+            }); 
+            $(this).prop('checked', true);
+        });
+        $('.checkbox4').click(function(){
+            $('.checkbox4').each(function(){
+                $(this).prop('checked', false); 
+            }); 
+            $(this).prop('checked', true);
+        });
 
-
-        function ShowAddMem() {
-
-            var checkBox = document.getElementById("AddMember_Re");
-            var text = document.getElementById("ShowAddMember_Re");
-            if (checkBox.checked == true){
-                text.style.display = "block";
-            } 
-            else{
-                text.style.display = "none";
+        $(function () {
+        $("#AddMember_Re").click(function () {
+            if ($(this).is(":checked")) {
+                $("#ShowAddMember_Re").show();
+            } else {
+                $("#ShowAddMember_Re").hide();
             }
-        }
+        });
+        $("#AddMember_Re2").click(function () {
+                  if ($(this).is(":checked")) {
+                      $("#ShowAddMember_Re").hide();
+                  } else {
+                      $("#ShowAddMember_Re").hide();
+                  }
+        });
+    });
+    //checkbox code ผลงานตีพิมพ์
+    $(function () {
+    $("#Working").click(function () {
+            if ($(this).is(":checked")) {
+                $("#ShowWorking").show();
+            } else {
+                $("#ShowWorking").hide();
+            }
+        });
+        $("#Working2").click(function () {
+                  if ($(this).is(":checked")) {
+                      $("#ShowWorking").hide();
+                  } else {
+                      $("#ShowWorking").hide();
+                  }
+        });
+    });
+    //checkbox code งานวิจัยและบริการวิชาการ
+    $(function () {
+    $("#Cap_Reseach").click(function () {
+            if ($(this).is(":checked")) {
+                $("#ShowDetil_TypeRe").show();
+                $("#ShowService_Aca").hide();
+            } else {
+                $("#ShowDetil_TypeRe").hide();
+            }
+        });
+        $("#BoxService_Aca").click(function () {
+                  if ($(this).is(":checked")) {
+                      $("#ShowDetil_TypeRe").hide();
+                      $("#ShowService_Aca").show();
+                  } else {
+                      $("#ShowDetil_TypeRe").hide();
+                      
+                  }
+        });
+    });
+    //checkbox code แหล่งทุนภายในและแหล่งทุนภายนอก
+    $(function () {
+    $("#Capital_Sidein").click(function () {
+            if ($(this).is(":checked")) {
+                $("#ShowCapital_in").show();
+                $("#ShowCapital_out").hide();
+            } else {
+                $("#ShowCapital_in").hide();
+            }
+        });
+        $("#Capital_Sideout").click(function () {
+                  if ($(this).is(":checked")) {
+                    $("#ShowCapital_out").show();
+                      $("#ShowCapital_in").hide();
+                  } else {
+                      $("#ShowCapital_out").hide();
+                      
+                  }
+        });
+    });
+
         function yesCheck(SelectOther) {
             var ShowOther = document.getElementById("TypeRe_Other");
 
@@ -133,36 +267,6 @@
                 ShowOther.style.display = "block";
             } else {
                 ShowOther.style.display = "none";
-            }
-        }
-        function Cap_Sidein(){
-            var BoxCap = document.getElementById("Capital_Sidein");
-            var ShowCap_Sidein = document.getElementById("ShowCapital_in");
-            if (BoxCap.checked == true){
-                ShowCap_Sidein.style.display = "block";
-            }
-            else{
-                ShowCap_Sidein.style.display = "none";
-            }
-        }
-        function Cap_Sideout(){
-            var BoxCap = document.getElementById("Capital_Sideout");
-            var ShowCap_Sideout = document.getElementById("ShowCapital_out");
-            if (BoxCap.checked == true){
-                ShowCap_Sideout.style.display = "block";
-            }
-            else{
-                ShowCap_Sideout.style.display = "none";
-            }
-        }
-        function Detil_TypeRe(){
-            var BoxCap_outRe = document.getElementById("Cap_Reseach");
-            var ShowCap_outTypeRe = document.getElementById("ShowDetil_TypeRe");
-            if (BoxCap_outRe.checked == true){
-                ShowCap_outTypeRe.style.display = "block";
-            }
-            else{
-                ShowCap_outTypeRe.style.display = "none";
             }
         }
         function CheckCap_Out(Other_Capout) {
@@ -174,16 +278,59 @@
                 ShowOther.style.display = "none";
             }
         }
-        function Service_Aca() {
-            var Box_Aca = document.getElementById("BoxService_Aca");
-            var Show_Aca = document.getElementById("ShowService_Aca");
-            if (Box_Aca.checked == true){
-                Show_Aca.style.display = "block";
-            }
-            else{
-                Show_Aca.style.display = "none";
-            }
-        }
+        $(function() {
+
+            $('input[name="datefilter"]').daterangepicker({
+                
+                autoUpdateInput: false,
+                locale: {
+                    "format": "DD/MM/YYYY"
+                }
+            });
+
+            $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + '-' + picker.endDate.format('DD/MM/YYYY'));
+            });
+
+            $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+            });
+
+        });
+        $(function() {
+
+            $('input[name="Time_period"]').daterangepicker({
+                
+                autoUpdateInput: false,
+                locale: {
+                    "format": "DD/MM/YYYY"
+                }
+            });
+
+            $('input[name="Time_period"]').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + '-' + picker.endDate.format('DD/MM/YYYY'));
+            });
+
+            $('input[name="Time_period"]').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+            });
+
+        });
+
+        $(function() {
+            $('input[name="DateDocument"]').daterangepicker({
+                // autoUpdateInput: false,
+                singleDatePicker: true,
+                showDropdowns: true,
+                minYear: 1900,
+                locale: {
+                    "format": "DD/MM/YYYY"
+                }
+                
+            });
+            
+        });
+        
 </script>
 
 
