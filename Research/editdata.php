@@ -1,7 +1,8 @@
 <?php
 require("connect.php");
-$Re_id = $_REQUEST['Re_id'];
-echo $Re_id;
+$Re_id = $_REQUEST['Re_ID'];
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,6 +43,11 @@ echo $Re_id;
         $fun_Status = $row_research['Funds_status'];
         $Bugget_Re = $row_research['Bugget'];
         $Time_Re = $row_research['Time_period'];
+        $type_approve = $row_research['Approve_status'];
+        $Time_approve = $row_research['Time_period_approve'];
+        $Published_Status = $row_research['Published_status'];
+
+
         // echo $fun_Status;
     }
     //
@@ -57,7 +63,7 @@ echo $Re_id;
     if(mysqli_num_rows($Funin_query)==1){
         $row_Funin = mysqli_fetch_assoc($Funin_query);
         $Funin_Agency = $row_Funin['Name_Agency'];
-        echo $Funin_Agency;
+
     }
 
     $Check_Funout_sql = "SELECT * FROM research INNER JOIN funds_out ON research.Re_id = funds_out.Re_id WHERE research.Re_ID = '$Re_id'";
@@ -66,8 +72,20 @@ echo $Re_id;
         $row_Funout = mysqli_fetch_assoc($Funout_query);
         $type_Funout = $row_Funout['Type_Funds_out'];
         $Funout_Agency = $row_Funout['Agency_name'];
-        echo $type_Funout;
-        echo $Funout_Agency;
+
+    }
+
+    $Check_Published_sql = "SELECT * FROM research INNER JOIN published ON research.Re_id = published.Re_id WHERE research.Re_ID = '$Re_id'";
+    $Published_query = mysqli_query($conn,$Check_Published_sql);
+    if(mysqli_num_rows($Published_query)==1){
+        $row_Published = mysqli_fetch_assoc($Published_query);
+        $type_Published_inter = $row_Published['TypePublished'];
+        $date_Published = $row_Published['date_published'];
+        $Volume = $row_Published['Volume'];
+        $Issue = $row_Published['Issue'];
+        $Page = $row_Published['Page'];
+
+
     }
 
     ?>
@@ -86,14 +104,36 @@ echo $Re_id;
                     echo "<input type='text' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 2'>";
                     echo "<input type='text' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 3'>";
                         
-                }?>
-                <?php  if(mysqli_num_rows($member_query)>0){
-                while ($member_row = mysqli_fetch_assoc($member_query)){
-                    $member_name = $member_row['MemberName'];
-                    // echo $member_name;
-                    echo "<input type='text' name='Member[]' value='$member_name'>";
-                    }
-                } ?>
+                }
+                elseif(mysqli_num_rows($member_query)==1){
+                    while ($member_row = mysqli_fetch_assoc($member_query)){
+                        $member_name = $member_row['MemberName'];
+                        $member_no = $member_row['NO'];
+                        echo "<input type='text' name='Member[]' value='$member_name'>";
+                        echo "<input type='text' name='no[]' value='$member_no' style='display: none;'>";
+                        }
+                    echo "<input type='text' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 2'>";
+                    echo "<input type='text' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 3'>";
+                }
+                elseif(mysqli_num_rows($member_query)==2){
+                    while ($member_row = mysqli_fetch_assoc($member_query)){
+                        $member_name = $member_row['MemberName'];
+                        $member_no = $member_row['NO'];
+                        echo "<input type='text' name='Member[]' value='$member_name'>";
+                        echo "<input type='text' name='no[]' value='$member_no' style='display: none;'>";
+                        }
+
+                    echo "<input type='text' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 3'>";
+                }
+                elseif(mysqli_num_rows($member_query)>2){
+                    while ($member_row = mysqli_fetch_assoc($member_query)){
+                        $member_name = $member_row['MemberName'];
+                        $member_no = $member_row['NO'];
+                        echo "<input type='text' name='Member[]' value='$member_name'>";
+                        echo "<input type='text' name='no[]' value='$member_no' style='display: none;'>";
+                        }
+                }
+                 ?>
                 </p>
 
         </div>
@@ -138,29 +178,29 @@ echo $Re_id;
             <div id="ShowCapital_out" style="display: none;">
 
                 <div>
-                    <input type="checkbox" class="checkbox2" name="Type_funds_out" id="Cap_Reseach"<?php if($type_Funout == '1'){echo 'checked' ;}?> value = "1"> งานวิจัย
+                    <input type="checkbox" class="checkbox2" name="Type_funds_out" id="Cap_Reseach"<?php if($fun_Status == '2'){if($type_Funout == '1'){echo 'checked' ;}}?> value = "1"> งานวิจัย
 
                     <div id="ShowDetil_TypeRe" style="display: none; ">
                     <select name="Agency_out" id="Agency_out" onchange="CheckCap_Out(this);">
-                    <option value="แผ่นดิน" <?php if($Funout_Agency == 'แผ่นดิน'){echo 'selected';} ?>>แผ่นดิน</option>
-                    <option value="รายได้" <?php if($Funout_Agency == 'รายได้'){echo 'selected';} ?>>รายได้</option>
-                    <option value="รายได้คณะ" <?php if($Funout_Agency == 'รายได้คณะ'){echo 'selected';} ?>>รายได้คณะ</option>
-                    <option value="สวทช." <?php if($Funout_Agency == 'สวทช.'){echo 'selected';} ?>>สวทช.</option>
-                    <option value="สกสว." <?php if($Funout_Agency == 'สกสว.'){echo 'selected';} ?>>สกสว.</option>
-                    <option value="วช." <?php if($Funout_Agency == 'วช.'){echo 'selected';} ?>>วช.</option>
-                    <option value="อว." <?php if($Funout_Agency == 'อว.'){echo 'selected';} ?>>อว.</option>
-                    <option value="อวน." <?php if($Funout_Agency == 'อวน.'){echo 'selected';} ?>>อวน.</option>
-                    <option value="Other"<?php if($Funout_Agency != 'อวน.' && $Funout_Agency != 'อว.' && $Funout_Agency != 'วช.' && $Funout_Agency != 'สกสว.' && $Funout_Agency != 'สวทช.' && $Funout_Agency != 'รายได้คณะ' && 
-                    $Funout_Agency != 'รายได้' && $Funout_Agency != 'แผ่นดิน' && $Funout_Agency != 'Other' ){echo "selected";} ?> >อื่น ๆ </option>
+                    <option value="แผ่นดิน" <?php if($fun_Status == '2'){if($Funout_Agency == 'แผ่นดิน'){echo 'selected';}} ?>>แผ่นดิน</option>
+                    <option value="รายได้" <?php if($fun_Status == '2'){if($Funout_Agency == 'รายได้'){echo 'selected';}} ?>>รายได้</option>
+                    <option value="รายได้คณะ" <?php if($fun_Status == '2'){if($Funout_Agency == 'รายได้คณะ'){echo 'selected';}} ?>>รายได้คณะ</option>
+                    <option value="สวทช." <?php if($fun_Status == '2'){if($Funout_Agency == 'สวทช.'){echo 'selected';}}?>>สวทช.</option>
+                    <option value="สกสว." <?php if($fun_Status == '2'){if($Funout_Agency == 'สกสว.'){echo 'selected';}} ?>>สกสว.</option>
+                    <option value="วช." <?php if($fun_Status == '2'){if($Funout_Agency == 'วช.'){echo 'selected';}} ?>>วช.</option>
+                    <option value="อว." <?php if($fun_Status == '2'){if($Funout_Agency == 'อว.'){echo 'selected';}} ?>>อว.</option>
+                    <option value="อวน." <?php if($fun_Status == '2'){if($Funout_Agency == 'อวน.'){echo 'selected';}} ?>>อวน.</option>
+                    <option value="Other"<?php if($fun_Status == '2'){if($Funout_Agency != 'อวน.' && $Funout_Agency != 'อว.' && $Funout_Agency != 'วช.' && $Funout_Agency != 'สกสว.' && $Funout_Agency != 'สวทช.' && $Funout_Agency != 'รายได้คณะ' && 
+                    $Funout_Agency != 'รายได้' && $Funout_Agency != 'แผ่นดิน' && $Funout_Agency != 'Other' ){echo "selected";}} ?> >อื่น ๆ </option>
                     </select>
-                    <p id= "Re_CapOut" style="display: none;"> <input type="text" name="Agency_out_other" id="" value="<?php if($type_Funout == '1'){echo $Funout_Agency;}?>" placeholder="โปรดระบุ" ></p>
+                    <p id= "Re_CapOut" style="display: none;"> <input type="text" name="Agency_out_other" id="" value="<?php if($fun_Status == '2'){if($type_Funout == '1'){echo $Funout_Agency;}}?>" placeholder="โปรดระบุ" ></p>
 
                     </div>
                 </div>
 
                 <div>
-                <input type="checkbox" class="checkbox2" name="Type_funds_out" id="BoxService_Aca" <?php if($type_Funout == '2'){echo 'checked' ;}?>  value="2"> บริการวิชาการ
-                    <p id= "ShowService_Aca" style="display: none;"> <input type="text" name="Agency_out_service" id="" placeholder="โปรดระบุ" <?php if($type_Funout == '2'){echo $Funout_Agency ;}?>></p>
+                <input type="checkbox" class="checkbox2" name="Type_funds_out" id="BoxService_Aca" <?php if($fun_Status == '2'){if($type_Funout == '2'){echo 'checked' ;}}?>  value="2"> บริการวิชาการ
+                    <p id= "ShowService_Aca" style="display: none;"> <input type="text" name="Agency_out_service" id="" placeholder="โปรดระบุ" <?php if($fun_Status == '2'){if($fun_Status == '2'){}if($type_Funout == '2'){echo $Funout_Agency ;}}?>></p>
                 </div>
 
             </div>
@@ -178,40 +218,44 @@ echo $Re_id;
 
         <div>
             ขอนุมัติดำเนินโครงการ <select name="approve_Type" id="">
-            <option value="1">เสนอโครงการ</option>
-            <option value="2">เซ็นสัญญา</option>
-            <option value="3">ขออนุมัติดำเนินโครงการ</option>
-            <option value="4">ขออนุมัติเบิกเงิน(รอบ1)</option>
-            <option value="5">ขออนุมัติเบิกเงิน(รอบ2)</option>
-            <option value="6">ขออนุมัติเบิกเงิน(รอบ3)</option>
-            <option value="7">ขออนุมัติขยายเวลา</option>
-            <option value="8">สิ้นสุดโครงการ</option>
+            <option value="1" <?php if($type_approve == '1'){echo 'selected';}?>>เสนอโครงการ</option>
+            <option value="2" <?php if($type_approve == '2'){echo 'selected';}?>>เซ็นสัญญา</option>
+            <option value="3" <?php if($type_approve == '3'){echo 'selected';}?>>ขออนุมัติดำเนินโครงการ</option>
+            <option value="4" <?php if($type_approve == '4'){echo 'selected';}?>>ขออนุมัติเบิกเงิน(รอบ1)</option>
+            <option value="5" <?php if($type_approve == '5'){echo 'selected';}?>>ขออนุมัติเบิกเงิน(รอบ2)</option>
+            <option value="6" <?php if($type_approve == '6'){echo 'selected';}?>>ขออนุมัติเบิกเงิน(รอบ3)</option>
+            <option value="7" <?php if($type_approve == '7'){echo 'selected';}?>>ขออนุมัติขยายเวลา</option>
+            <option value="8" <?php if($type_approve == '8'){echo 'selected';}?>>สิ้นสุดโครงการ</option>
             </select>
-            <div>ระยะเวลา 
-                <input type="text" name="Time_period" value="" >
+            <div>ระยะเวลาขอนุมัติ
+                <input type="text" name="Time_period" value="<?php echo $Time_approve?>" >
             </div>
         </div>
 
         <div>
-            <input type="checkbox" class="checkbox3" name="Published" id="Working" value="1"  >มีผลงานตีพิมพ์
-            <input type="checkbox" class="checkbox3" name="Published" id="Working2"  value="2" >ไม่มีผลงานตีพิมพ์
+            <input type="checkbox" class="checkbox3" name="Published" id="Working" value="1" <?php if($Published_Status == '1'){echo 'checked';}?>>มีผลงานตีพิมพ์
+            <input type="checkbox" class="checkbox3" name="Published" id="Working2"  value="2"  <?php if($Published_Status == '2'){echo 'checked';}?>>ไม่มีผลงานตีพิมพ์
 
             <div id="ShowWorking" style="display: none;">
                 <fieldset><legend><p>ผลงานตีพิมพ์</p></legend>
                 ประเภทของงานตีพิมพ์ :
-                    <input type="checkbox" class="checkbox4" name="type_Published_inter" id="Inter" value="1"> วารสารระดับชาติ
-                    <input type="checkbox" class="checkbox4" name="type_Published_inter" id="Inter2" value="2"> วารสารระดับนานาชาติ <br>
+                    <input type="checkbox" class="checkbox4" name="type_Published_inter" id="Inter" value="1" <?php if($Published_Status == '1'){if($type_Published_inter == '1'){echo 'checked';}}?>> วารสารระดับชาติ
+                    <input type="checkbox" class="checkbox4" name="type_Published_inter" id="Inter2" value="2" <?php if($Published_Status == '1'){if($type_Published_inter == '2'){echo 'checked';}}?>> วารสารระดับนานาชาติ <br>
 
-                ว/ด/ป ที่เผยแพร่ <input type="text" name="DateDocument" value=""><br>
+                ว/ด/ป ที่เผยแพร่ <input type="text" name="DateDocument" value="<?php if($Published_Status == '1'){echo $date_Published;}?>"  ><br>
                 
                 <div>
-                    Volome : <input type="text" placeholder="No." name="Volome"> No. ISSUE : <input type="text" placeholder="No. ISSUE" name="ISSUE"> 
-                    หน้าที่พิมพ์ :  <input type="text" name="Page_Published" placeholder="หน้าที่พิมพ์">
+                    Volome : <input type="text" placeholder="No." name="Volome" value="<?php if($Published_Status == '1'){echo $Volume;}?>">
+                    No. ISSUE : <input type="text" placeholder="No. ISSUE" name="ISSUE" value="<?php if($Published_Status == '1'){echo $Issue;}?>"> 
+                    หน้าที่พิมพ์ :  <input type="text" name="Page_Published" placeholder="หน้าที่พิมพ์" value="<?php if($Published_Status == '1'){echo $Page;}?>">
                 </div>
                 </fieldset>
             </div>
         </div>
-        <button type="submit">Save</button>
+
+        <input type="text" name="Re_id_Edit" value="<?php echo $Re_id;?>" style="display: none;">
+
+        <button type="submit" value="Update" name="but_Submit">Save</button>
     </form>
     </div>
     
@@ -305,6 +349,13 @@ echo $Re_id;
     $(function () {
     $("#Working").click(function () {
             if ($(this).is(":checked")) {
+                $("#ShowWorking").show();
+            } else {
+                $("#ShowWorking").hide();
+            }
+        });
+        $("#Working").ready(function () {
+            if ($(Working).is(":checked")) {
                 $("#ShowWorking").show();
             } else {
                 $("#ShowWorking").hide();

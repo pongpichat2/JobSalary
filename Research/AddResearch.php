@@ -119,7 +119,7 @@
             <option value="7">ขออนุมัติขยายเวลา</option>
             <option value="8">สิ้นสุดโครงการ</option>
             </select>
-            <div>ระยะเวลา 
+            <div>ระยะเวลาขอนุมัติ
                 <input type="text" name="Time_period" value="" >
             </div>
         </div>
@@ -143,7 +143,7 @@
                 </fieldset>
             </div>
         </div>
-        <button type="submit">Save</button>
+        <button type="submit" value="Insert" name="but_Submit">Save</button>
     </form>
     </div>
 

@@ -8,18 +8,31 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
 
 ?>
 <html>
-<title>Research</title>
+    <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
+
+ 
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap.min.js"></script>
-    
+
+    </head>
+<title>Research</title>
+
+<body>
+    <div>
+        <form action="CheckLogin.php" method="POST">
+            login
+            <p>E-mail : <input type="text"  name="email" placeholder="E - mail"></p>
+            <p>Password : <input type="password" name="Pass"  placeholder="Password"></p>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 
     <a href="AddResearch.php">AddResearch Page</a>
     <div class="container">
@@ -189,6 +202,9 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
     </div>
     
 
+</body>
+    
+    
 </html>
 <script>
     $(document).ready(function() {

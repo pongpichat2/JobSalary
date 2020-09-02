@@ -3,7 +3,7 @@ require("connect.php");
 // $sql = "SELECT * FROM (research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)";
 $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)"
         ."INNER JOIN approve_status ON research.Approve_status = approve_status.Approve_ID)";
-// echo $sql;
+
 
 
 ?>
@@ -12,7 +12,7 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
+
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
@@ -21,24 +21,26 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap.min.js"></script>
     
 
-    <a href="AddResearch.php">AddResearch Page</a>
+    <a href="AddResearch.php" >AddResearch Page</a>
     <div class="container">
     <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
         <thead>
             <tr>
+                
                 <th>ผู้วิจัย</th>
                 <th>ชื่อโครงการวิจัย(ภาษาไทย)</th>
                 <th>ระยะเวลาดำเนินงาน</th>
                 <th>งบปนะมาณ</th>
-                <th>แก้ไข</th>
+                <th>Action</th>
                 <th>ขออุมัติดำเนินโครงงาน</th>
                 <th>แหล่งเงินทุน</th>
                 <th>ชื่อโครางงานวิจัย(ภาษาอังกฤษ)</th>
                 <th>ชื่อผู้ร่วมวิจัย</th>
+                <!-- <td style="display: none;">Re_id</td> -->
                 <th>ประเภทงานวิจัย</th>
+                
                 <th>ผลงานตีพิมพ์</th>
-                <!-- <?php if($funds_status_row == 1){echo "<th>Volume</th>";}?>
-                <?php if($funds_status_row == 2){echo "";}?> -->
+
             </tr>
         </thead>
         <tbody>
@@ -62,27 +64,56 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
                     //ผู้ร่วมวิจัย
                     if($StatusStake == '1'){
                         $member = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)";
-                    $member .="INNER JOIN approve_status ON research.Approve_status = approve_status.Approve_ID)INNER JOIN re_member ON re_member.Re_ID = research.Re_ID)";
+                        $member .="INNER JOIN approve_status ON research.Approve_status = approve_status.Approve_ID)INNER JOIN re_member ON re_member.Re_ID = research.Re_ID)";
 
-                    $member_query = mysqli_query($conn,$member);
-                    if (mysqli_num_rows($member_query)>0){
-                        $count = 1;
-                        $member.="WHERE research.Re_ID = '$Re_id'";
-                        $member_fetch_query = mysqli_query($conn,$member);
-                        while ($member_fetch_row = mysqli_fetch_assoc($member_fetch_query)){
-                            $membername = $member_fetch_row['MemberName'];
-                            if($count == 1){
-                                $membername1 = $member_fetch_row['MemberName'];
+                        $member_query = mysqli_query($conn,$member);
+                        // echo $member;
+                        // echo "<br>";
+                        if (mysqli_num_rows($member_query)>0){
+                            $count = 1;
+                            $member.="WHERE research.Re_ID = '$Re_id'";
+                            $member_fetch_query = mysqli_query($conn,$member);
+                            if(mysqli_num_rows($member_fetch_query) == 1){
+                                while ($member_fetch_row = mysqli_fetch_assoc($member_fetch_query)){
+                                $membername = $member_fetch_row['MemberName'];
+                                }
                             }
-                            if($count == 2){
-                                $membername2 = $member_fetch_row['MemberName'];
+                            elseif(mysqli_num_rows($member_fetch_query) == 2){
+                                while ($member_fetch_row = mysqli_fetch_assoc($member_fetch_query)){
+                                $membername = $member_fetch_row['MemberName'];
+                                if($count == 1){
+                                    $membername1 = $member_fetch_row['MemberName'];
+                                    // echo $membername1;
+                                }
+                                elseif($count == 2){
+                                    $membername2 = $member_fetch_row['MemberName'];
+                                    // echo $membername2;
+                                }
+                                $count = $count+1;
+                                }
+                                $membername = $membername1.",".$membername2;
                             }
-                            if($count == 3){
-                                $membername3 = $member_fetch_row['MemberName'];
+                            elseif(mysqli_num_rows($member_fetch_query) == 3){
+                                while ($member_fetch_row = mysqli_fetch_assoc($member_fetch_query)){
+                                $membername = $member_fetch_row['MemberName'];
+                                if($count == 1){
+                                    $membername1 = $member_fetch_row['MemberName'];
+                                    // echo $membername1;
+                                }
+                                elseif($count == 2){
+                                    $membername2 = $member_fetch_row['MemberName'];
+                                    // echo $membername2;
+                                }
+                                elseif($count == 3){
+                                    $membername3 = $member_fetch_row['MemberName'];
+                                    // echo $membername3;
+                                }
+                                $count = $count+1;
+                                }
+                                $membername = $membername1.",".$membername2.",".$membername3;
                             }
-                            $count = $count+1;
+                            
                         }
-                    }
                     }
                     elseif($StatusStake == '2'){
                         $StringNonStake = ": ไม่มีผู้ร่วมวิจัย";
@@ -160,31 +191,34 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
                             
                         }
                     }}
-
-                    echo "<form action='AddResearch.php'>";       
+                    
                     echo "<tr>";
-                    echo "<td>". $row['Name_leader'] ."</td>" 
-                    ."<td>". $row['NameRe_TH'] ."</td>"
+                    echo "<form action='insertResearch.php' method='POST' >";
+                    
+                    echo "<td>". $row['Name_leader'] ."</td>"
+                    ."<td>".$row['NameRe_TH']."</td>"
                     ."<td>". $row['Time_period'] ."</td>"
                     ."<td>". $row['Bugget'] ."</td>"
-                    // ."<td><input type='submit' id='vbvb' value='vbvb'></td>"
-                    ."<td><a href='editdata.php?Re_id=$Re_id'><button>แก้ไขข้อมูล</button></a></td>"
+
+                    ."<td><button  value='Edit_Research' type='Submit' name='but_Submit'>แก้ไขข้อมูล</button>
+                    <button style='margin-left:10px;' value='Delete'  onclick='return Con_Delete();' type='submit' name='but_Submit'>Delete</button></td>"
                     ."<td>".$row['Approve'] ."  ระยะเวลา :  ". $row['Time_period_approve'] ."</td>"
                     ."<td>". $funds_type; if ($funds_status == 2){echo $string;}  echo "  จากหน่วยงาน :  ". $fund ."</td>";
                     echo "<td>". $row['NameRe_ENG'] ."</td>";
                     if($StatusStake == '1'){
-                        echo "<td>". $membername1 ." , ".$membername2." , ".$membername3."</td>";
+
+                        echo "<td>". $membername . "<input type='text'  name='Re_id_Delete' value='$Re_id' style='display: none;'>" ."</td>";
                     }
                     elseif($StatusStake == '2'){
                         echo "<td>". $StringNonStake ."</td>";
                     }
-                    
                     echo"<td>". $row['Type_research'] ."</td>"
+                    
                     ."<td>"; if($publish_status == 1){echo $publish_1."<br>" .$DataPublished;} 
                     if($publish_status == 2){echo $non_publish1;} echo " </td>";
-                    echo "</tr>";
+                    
                     echo "</form>";
-
+                    echo "</tr>";
                 }
           
                 ?>
@@ -201,6 +235,10 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
     // $('#vbvb').
     
 } );
+function Con_Delete(){
+    return confirm('คุณต้องการลบงานวิจัยใช่ไหม ?');
+    
+}
 </script>
 
 
