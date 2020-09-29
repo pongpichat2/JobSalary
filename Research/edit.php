@@ -1,5 +1,8 @@
 <?php
 require("connect.php");
+session_start();
+
+
 // $sql = "SELECT * FROM (research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)";
 $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)"
         ."INNER JOIN approve_status ON research.Approve_status = approve_status.Approve_ID)";
@@ -8,6 +11,7 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
 
 ?>
 <html>
+<head>
 <title>Edit</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css">
@@ -19,28 +23,297 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.5/js/responsive.bootstrap.min.js"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300&display=swap" rel="stylesheet">
+</head>
+<style>
+    body{
+        height: 100%;
+        margin: 0;
+        background-size: cover;
+        background-position: center;
+        }
+    .container-show{
+        position: fixed;
+        width: 1000px;
+        margin-left: 20%;
+        margin-top: 20px;
+        }
+    .container-show table{
+        font-family: 'Sarabun', sans-serif;
+    }
+    .container-show table thead .title-show{
+        text-align: center;
+        height: 50px;
+        background: rgba(151, 57, 57, 0.7);
+        border-collapse: collapse;
+    }
+    .container-show table tbody .but-Edit{
+        border: 2px solid black ;
 
-    <a href="AddResearch.php" >AddResearch Page</a>
-    <div class="container">
+        height: 35px;
+
+        font-weight: bold;
+        box-shadow: 1px 1.5px black;
+        transition: 0.8s;
+    }
+    .container-show table tbody .but-Edit:hover{
+        background: rgba(99, 240, 96, 0.83);
+    }
+    .container-show table tbody .but-Delete{
+        border: 2px solid black ;
+
+        height: 35px;
+ 
+        font-weight: bold;
+        box-shadow: 1px 1.5px black;
+        transition: 0.8s;
+    }
+    .container-show table tbody .but-Delete:hover{
+        background: rgba(244, 46, 46, 0.81);
+    }
+    nav{
+    top: 0;
+    background: #222;
+    padding: 5px 20px;
+}
+ul{
+    list-style-type: none;
+}
+a{
+    color: white;
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: underline;
+}
+.menu li{
+    font-size: 16px;
+    padding: 15px 5px;
+}
+.menu li a {
+    display: block;
+}
+.logo a {
+    font-size: 20px;
+}
+.botton.secondary {
+    border-bottom: 1px #444 solid;
+}
+
+/* Mobile menu */
+.menu{
+    
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+.toggle{
+    order: 1;
+}
+.item.button{
+    order: 2;
+}
+.item{
+    width: 100%;
+    text-align: center;
+    order: 3;
+    display: none;
+}
+.item.active{
+    display: block;
+}
+.toggle{
+    cursor: pointer;
+}
+.bars{
+    background: #999;
+    display: inline-block;
+    height: 2px;
+    position: relative;
+    width: 18px;
+}
+.bars::before,.bars::after{
+    background: #999;
+    content: "";
+    display: inline-block;
+    height: 2px;
+    position: absolute;
+    width: 18px;
+}
+.bars::before{
+    top: 5px;
+}
+.bars::after{
+    top: -5px;
+}
+.arrow-up{
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid #fff;
+    right: 35px;
+    top: 55px;
+    display: none;
+}
+.login-form{
+    position: absolute;
+    width: 300px;
+    height: auto;
+    background: #fff;
+    right: 10px;
+    top: 70px;
+    border-radius: 2px;
+    border-bottom: 5px solid gray;
+    display: none;
+}
+.login-form>form{
+    width: 250px;
+    margin: 25px auto;
+    font-size: 16px;
+    font-family: sans-serif,Arial;
+    color: gray;
+    letter-spacing: -0.05em;
+}
+input[type="text"],
+input[type="password"]{
+    width: 240px;
+    height: 35px;
+    border: 0px;
+    outline: none;
+    box-shadow: inset 0 0 10px #eee;
+    border-radius: 5px;
+    border-bottom: 10px;
+    margin-top: 5px;
+    font-family: sans-serif,Arial;
+    font-size: 16px;
+}
+.label{
+    width: 240px;
+    height: 35px;
+    border: 0px;
+    outline: none;
+    box-shadow: inset 0 0 10px #eee;
+    border-radius: 5px;
+    border-bottom: 10px;
+    margin-top: 5px;
+    font-family: sans-serif,Arial;
+    font-size: 16px;
+}
+input[type="submit"]{
+    width: 95%;
+    height: 35px;
+    background: #0b8256;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: sans-serif,Arial;
+    color: white;
+    outline: none;
+    border: 0px;
+    border-radius: 3px;
+    letter-spacing: -0.05em;
+    cursor: pointer;
+}
+input[type="submit"]:hover{
+    background: #0a4b33;
+}
+
+
+/* Tablet menu */
+@media all and (min-width:468px){
+    .menu{
+        justify-content: center;
+    }
+    .logo{
+        flex: 1;
+    }
+    .item.button{
+        width: auto;
+        order: 1;
+        display: block;
+    }
+    .toggle{
+        order: 2;
+    }
+    .button.secondary{
+        border: 0;
+    }
+    .button a{
+        text-decoration: none;
+        padding: 7px 15px;
+        background: teal;
+        border: 1px solid #006d6d;
+        border-radius: 50em;
+    }
+    .button.secondary a{
+        background: transparent;
+    }
+    .button a:hover{
+        transition: all .25s;
+    }
+    .button:not(.secondary) a:hover{
+        background: #006d6d;
+        border-color: #005959;
+    }
+    .button.secondary a:hover{
+        color: #ddd;
+    }
+}
+@media all and (min-width:768px){
+    .item{
+        display: block;
+        width: auto;
+    }
+    .toggle{
+        display: none;
+    }
+    .logo{
+        order: 0;
+    }
+    .item{
+        order: 1;
+    }
+    .button{
+        order: 2px;
+    }
+    .menu li{
+        padding: 15px 10px;
+    }
+    .menu li.button{
+        padding-right: 0;
+    }
+}
+
+</style>
+<body>
+    <nav>
+        <ul class="menu">
+            <li class="logo"><a href="#">Eng Up</a></li>
+            <li class="item button secondary"><a href="AddResearch.php">เพิ่มข้อมูล</a></li>
+            <li class="item button secondary"><a href="edit.php">วิจัย</a></li>
+            <p style="color: white;"><?php echo $_SESSION['emailAdmin']; ?></p>
+            <li class="item button secondary"><a href="#">Log out</a></li>
+        </ul>
+        
+    </nav>
+
+    <div class="container-show">
     <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
         <thead>
             <tr>
-                
-                <th>ผู้วิจัย</th>
-                <th>ชื่อโครงการวิจัย(ภาษาไทย)</th>
-                <th>ระยะเวลาดำเนินงาน</th>
-                <th>งบปนะมาณ</th>
-                <th>Action</th>
-                <th>ขออุมัติดำเนินโครงงาน</th>
-                <th>แหล่งเงินทุน</th>
-                <th>ชื่อโครางงานวิจัย(ภาษาอังกฤษ)</th>
-                <th>ชื่อผู้ร่วมวิจัย</th>
-                <!-- <td style="display: none;">Re_id</td> -->
-                <th>ประเภทงานวิจัย</th>
-                
-                <th>ผลงานตีพิมพ์</th>
-
+                <th class="title-show">ผู้วิจัย</th>
+                <th class="title-show">ชื่อโครงการวิจัย(ภาษาไทย)</th>
+                <th class="title-show">ระยะเวลาดำเนินงาน</th>
+                <th class="title-show">งบประมาณ</th>
+                <th class="title-show">Action</th>
+                <th class="title-show">ขออนุมัติดำเนินโครงงาน</th>
+                <th class="title-show">แหล่งเงินทุน</th>
+                <th class="title-show">ชื่อโครางงานวิจัย(ภาษาอังกฤษ)</th>
+                <th class="title-show">ชื่อผู้ร่วมวิจัย</th>
+                <th class="title-show">ประเภทงานวิจัย</th>
+                <th class="title-show">ผลงานตีพิมพ์</th>
             </tr>
         </thead>
         <tbody>
@@ -133,7 +406,6 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
                             $Volume = $rowpublished['Volume'];
                             $ISSUE = $rowpublished['Issue'];
                             $Page = $rowpublished['Page'];
-
                             $DataPublished ="ประเภทของงานตีพิมพ์ : " .$typePublished."<br>" . "วันที่ตีพิมพ์ : " .$datePublished."<br>" ."VOLUME : ".$Volume."<br>". "ISSUE : ".$ISSUE."<br>"
                             ."Page : ".$Page ;
             
@@ -141,7 +413,6 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
 
                     }
 
-                    
                     //เงินทุนภายใน
                     if($funds_status == "1"){
                         $funds_in = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)";
@@ -194,16 +465,15 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
                     
                     echo "<tr>";
                     echo "<form action='insertResearch.php' method='POST' >";
-                    
                     echo "<td>". $row['Name_leader'] ."</td>"
                     ."<td>".$row['NameRe_TH']."</td>"
                     ."<td>". $row['Time_period'] ."</td>"
                     ."<td>". $row['Bugget'] ."</td>"
 
-                    ."<td><button  value='Edit_Research' type='Submit' name='but_Submit'>แก้ไขข้อมูล</button>
-                    <button style='margin-left:10px;' value='Delete'  onclick='return Con_Delete();' type='submit' name='but_Submit'>Delete</button></td>"
+                    ."<td><button  value='Edit_Research' type='Submit' class='but-Edit' name='but_Submit'>แก้ไขข้อมูล </button>
+                    <button style='margin-left:10px;' value='Delete' class='but-Delete' onclick='return Con_Delete();' type='submit' name='but_Submit'>ลบข้อมูล</button></td>"
                     ."<td>".$row['Approve'] ."  ระยะเวลา :  ". $row['Time_period_approve'] ."</td>"
-                    ."<td>". $funds_type; if ($funds_status == 2){echo $string;}  echo "  จากหน่วยงาน :  ". $fund ."</td>";
+                    ."<td>". $funds_type; if ($funds_status == 2){echo "<br>".$string."<br>";}  echo "  จากหน่วยงาน :  ". $fund ."</td>";
                     echo "<td>". $row['NameRe_ENG'] ."</td>";
                     if($StatusStake == '1'){
 
@@ -220,7 +490,6 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
                     echo "</form>";
                     echo "</tr>";
                 }
-          
                 ?>
             <!-- </tr> -->
         </tbody>
@@ -228,6 +497,10 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
     </div>
     
 
+</body>
+    
+
+    
 </html>
 <script>
     $(document).ready(function() {

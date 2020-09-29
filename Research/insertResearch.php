@@ -83,8 +83,14 @@ if($But_Sub == 'Insert'){
     // มีผู้ร่วมวิจัย
     if($StatusMemRe == "1"){
         foreach ($MemberName as $Mam_Name ){
-        $sqlMember = "INSERT INTO re_member (Re_ID, MemberName) Value ('$Re_ID', '$Mam_Name')";
-        $result2 = mysqli_query($conn,$sqlMember);
+            if($Mam_Name == Null or $Mam_Name == ''){
+                break;
+            }
+            else{
+                $sqlMember = "INSERT INTO re_member (Re_ID, MemberName) Value ('$Re_ID', '$Mam_Name')";
+                $result2 = mysqli_query($conn,$sqlMember);
+            }
+        
     }
 
     // มีการตีพิมพ์
@@ -174,8 +180,14 @@ elseif($But_Sub == 'Update'){
             $membersql_query = mysqli_query($conn,$membersql);
             if(mysqli_num_rows($membersql_query)>0){
                 for ($i=0;$i < count($NO_Edit);$i++){
-                    $MemberName_sql0 = "UPDATE re_member SET MemberName = '$MemberName[$i]' WHERE NO = $NO_Edit[$i]";
-                    $MemberName_sql0_query = mysqli_query($conn,$MemberName_sql0);
+                    if($MemberName[$i] == null or $MemberName[$i] == ''){
+                        mysqli_query($conn,"DELETE FROM re_member WHERE NO = $NO_Edit[$i]");
+                    }
+                    else{
+                        $MemberName_sql0 = "UPDATE re_member SET MemberName = '$MemberName[$i]' WHERE NO = $NO_Edit[$i]";
+                        $MemberName_sql0_query = mysqli_query($conn,$MemberName_sql0);
+                    }
+                    
                 }
             }
             else{
@@ -207,10 +219,6 @@ elseif($But_Sub == 'Delete'){
 elseif($But_Sub == 'Edit_Research'){
     header("Location:editdata.php?Re_ID=$Re_id_De");
 }
-
-
-
-
 
 
 
