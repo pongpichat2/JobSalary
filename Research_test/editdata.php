@@ -336,6 +336,43 @@ input[type="submit"]:hover{
         padding-right: 0;
     }
 }
+.FormAddRe .Member_NumRe{
+    text-align: center;
+    font-family: 'Sarabun', sans-serif;
+    margin-left: 5px;
+    height: 20px;
+    width: 100px;
+    border: 2px solid black;
+    border-radius: 5px;
+    transition: 0.5s;
+}
+.FormAddRe .Member_NumRe:focus{
+    box-shadow: 0 0 0 4px rgba(105, 177, 230, 0.81);
+}
+.FormAddRe .MemberResearch{
+    font-family: 'Sarabun', sans-serif;
+    margin-left: 10px;
+    border: 2px solid black;
+
+}
+.FormAddRe .MemberResearch:focus{
+    box-shadow: 0 0 0 4px rgba(105, 177, 230, 0.81);
+}
+.FormAddRe .But-AddMem{
+    font-family: 'Sarabun', sans-serif;
+    font-weight: bold;
+    margin-left: 20px;
+    width: 60px;
+    height: 30px;
+    border: 2px solid black;
+    background: none;
+    transition: 0.6s;
+}
+.FormAddRe .But-AddMem:hover{
+    border-radius: 10px;
+    box-shadow: 1px 1px 0 black;
+    background-color: rgba(105, 177, 230, 0.81);
+}
 
 
 </style>
@@ -345,6 +382,7 @@ input[type="submit"]:hover{
             <li class="logo"><a href="edit.php">Eng Up</a></li>
             <li class="item button secondary"><a href="AddResearch.php">เพิ่มข้อมูล</a></li>
             <li class="item button secondary"><a href="edit.php">วิจัย</a></li>
+            <li class="item button secondary"><a href="Bugfaculty.php">รายได้คณะ</a></li>
             <p style="color: white;"><?php echo $_SESSION['emailAdmin']; ?></p>
             <li class="item button secondary"><a href="logout.php">Log out</a></li>
         </ul>
@@ -352,12 +390,13 @@ input[type="submit"]:hover{
     </nav>
     <?php
     //leader_name and status_stake
-    $leader_sql = "SELECT * FROM research WHERE Re_ID = '$Re_id'";
+    $leader_sql = "SELECT * FROM research INNER JOIN name_leader ON research.ID_Leader = name_leader.ID_Leader WHERE Re_ID = '$Re_id'";
     // echo $leader_sql;
     $leader_query = mysqli_query($conn,$leader_sql);
     if(mysqli_num_rows($leader_query)==1){
         $row_research = mysqli_fetch_assoc($leader_query);
-        $leader_name = $row_research['Name_leader'];
+        $ID_Leader = $row_research['ID_Leader'];
+        $leader_name = $row_research['Name_Leader'];
         $type_stakeholder = $row_research['Status_stake'];
         $NameRe_TH = $row_research['NameRe_TH'];
         $NameRe_ENG = $row_research['NameRe_ENG'];
@@ -370,7 +409,7 @@ input[type="submit"]:hover{
         $Published_Status = $row_research['Published_status'];
 
 
-        // echo $fun_Status;
+
     }
     //
     $member_sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)";
@@ -414,7 +453,74 @@ input[type="submit"]:hover{
     <div class="FormAddRe" style="background: white;">
     <div style="margin-left: 30px;">
     <form action="insertResearch.php" method="POST">
-        <p style="font-weight: bold;">ชื่อหัวหน้าโครงงาน <input type="text" class="Leader_Name" name="Leader_Re" value="<?php echo $leader_name;?>" placeholder="หัวหน้าโครงงาน"></p>
+        <p style="font-weight: bold;">ชื่อหัวหน้าโครงงาน : 
+        <select name="Leader_Re" class="Leader_Research" id="">
+                <option <?php if($ID_Leader == '1'){ echo 'selected'; }?> value="1">ผศ.ดร. วสันต์ คำสนาม</option>
+                <option <?php if($ID_Leader == '2'){ echo 'selected'; }?> value="2">ผศ.ดร. สุทธินันท์ ศรีรัตยาวงค์</option>
+                <option <?php if($ID_Leader == '3'){ echo 'selected'; }?> value="3">ผศ.ดร. นพรัตน์ เกตุขาว</option>
+                <option <?php if($ID_Leader == '4'){ echo 'selected'; }?> value="4">ผศ.ดร. ปุริมพัฒน์ สัทธรรมนุวงศ์</option>
+                <option <?php if($ID_Leader == '5'){ echo 'selected'; }?> value="5">ดร. ปรเมศร์ ปธิเก</option>
+                <option <?php if($ID_Leader == '6'){ echo 'selected'; }?> value="6">ดร. ฝนทิพย์ จินันทุยา</option>
+                <option <?php if($ID_Leader == '7'){ echo 'selected'; }?> value="7">ดร. รัชนีวรรณ อังกุรบุตร์</option>
+                <option <?php if($ID_Leader == '8'){ echo 'selected'; }?> value="8">ผศ.ดร. วิชญ์พล ฟักแก้ว</option>
+                <option <?php if($ID_Leader == '9'){ echo 'selected'; }?> value="9">ผศ.ดร.สุธรรม อรุณ</option>
+                <option <?php if($ID_Leader == '10'){ echo 'selected'; }?> value="10">ผศ. นัทธิ์ธนนท์ พงษ์พานิช</option>
+                <option <?php if($ID_Leader == '11'){ echo 'selected'; }?> value="11">อ. อดิศร ประสิทธิ์ศักดิ์</option>
+                <option <?php if($ID_Leader == '12'){ echo 'selected'; }?> value="12">รศ.ดร. เชวศักดิ์ รักเป็นไทย</option>
+                <option <?php if($ID_Leader == '13'){ echo 'selected'; }?> value="13">รศ.ดร. สิทธิเดช วชิราศรีศิริกุล</option>
+                <option <?php if($ID_Leader == '14'){ echo 'selected'; }?> value="14">รศ.ดร. จงลักษณ์ พาหะซา</option>
+                <option <?php if($ID_Leader == '15'){ echo 'selected'; }?> value="15">ผศ.ดร. ณัฐพงษ์ โปธิ</option>
+                <option <?php if($ID_Leader == '16'){ echo 'selected'; }?> value="16">ผศ. ดวงดี แสนรักษ์</option>
+                <option <?php if($ID_Leader == '17'){ echo 'selected'; }?> value="17">ดร. ดำรงค์ อมรเดชาพล</option>
+                <option <?php if($ID_Leader == '18'){ echo 'selected'; }?> value="18">ผศ. ดร.ธนาทิพย์ จันทร์คง</option>
+                <option <?php if($ID_Leader == '19'){ echo 'selected'; }?> value="19">อ. สุรพล ดำรงกกิตติกุล</option>
+                <option <?php if($ID_Leader == '20'){ echo 'selected'; }?> value="20">อ. กรวิน สุวรรรภักดิ์</option>
+                <option <?php if($ID_Leader == '21'){ echo 'selected'; }?> value="21">ดร. เกรียงศักดิ์ ไกรกิจราษฎร์</option>
+                <option <?php if($ID_Leader == '22'){ echo 'selected'; }?> value="22">อ. ธนกานต์ สวนกัน</option>
+                <option <?php if($ID_Leader == '23'){ echo 'selected'; }?> value="23">ดร. บรรเทิง ยานะ</option>
+                <option <?php if($ID_Leader == '24'){ echo 'selected'; }?> value="24">อ. วาสนา นากุ</option>
+                <option <?php if($ID_Leader == '25'){ echo 'selected'; }?> value="25">อ.ศราวุธ แต้โอสถ</option>
+                <option <?php if($ID_Leader == '26'){ echo 'selected'; }?> value="26">รศ.ดร.ณัฐพงศ์ ดำรงวิริยะนุภาพ</option>
+                <option <?php if($ID_Leader == '27'){ echo 'selected'; }?> value="27">รศ. กิตติพงษ์ วุฒิจำนงค์</option>
+                <option <?php if($ID_Leader == '28'){ echo 'selected'; }?> value="28">รศ.ดร. ธนกร ชมภูรัตน์</option>
+                <option <?php if($ID_Leader == '29'){ echo 'selected'; }?> value="29">ผศ.ดร. ปรีดา ไชยมหาวัน</option>
+                <option <?php if($ID_Leader == '30'){ echo 'selected'; }?> value="30">ผศ.ดร. สมบูรณ์ เซี่ยงฉิน</option>
+                <option <?php if($ID_Leader == '31'){ echo 'selected'; }?> value="31">ผศ.ดร. สุริยาวุธ ประอ้าย</option>
+                <option <?php if($ID_Leader == '32'){ echo 'selected'; }?> value="32">ผศ. ปิยพงษ์ สุวรรณมณีโชติ</option>
+                <option <?php if($ID_Leader == '33'){ echo 'selected'; }?> value="33">ดร. ธีรพจน์ ศุภวิริยะกิจ</option>
+                <option <?php if($ID_Leader == '34'){ echo 'selected'; }?> value="34">ดร. ขวัญสิรินภา ธนะวงศ์</option>
+                <option <?php if($ID_Leader == '35'){ echo 'selected'; }?> value="35">ดร. ปาลินี สุมิตสวรรค์</option>
+                <option <?php if($ID_Leader == '36'){ echo 'selected'; }?> value="36">ดร. อภิชาต บัวกล้า</option>
+                <option <?php if($ID_Leader == '37'){ echo 'selected'; }?> value="37">อ. ธเนศ ทองเดชศรี</option>
+                <option <?php if($ID_Leader == '38'){ echo 'selected'; }?> value="38">อ. ชัยวัฒน์ แสงศรีจันทร์</option>
+                <option <?php if($ID_Leader == '39'){ echo 'selected'; }?> value="39">อ. สุรเชษ ศรีนารา</option>
+                <option <?php if($ID_Leader == '40'){ echo 'selected'; }?> value="40">อ. วรจักร จันทร์แว่น</option>
+                <option <?php if($ID_Leader == '41'){ echo 'selected'; }?> value="41">อ. ณพล ศรีศักดา</option>
+                <option <?php if($ID_Leader == '42'){ echo 'selected'; }?> value="42">ดร. วรเทพ แซ่ล่อง</option>
+                <option <?php if($ID_Leader == '43'){ echo 'selected'; }?> value="43">ดร. ทรงวุฒิ ประกายวิเชียร</option>
+                <option <?php if($ID_Leader == '44'){ echo 'selected'; }?> value="44">ผศ. เอราวิล ถาวร</option>
+                <option <?php if($ID_Leader == '45'){ echo 'selected'; }?> value="45">ผศ. จักรทอง ทองจัตุ</option>
+                <option <?php if($ID_Leader == '46'){ echo 'selected'; }?> value="46">ผศ. ดร. พจนศักดิ์ พจนา</option>
+                <option <?php if($ID_Leader == '47'){ echo 'selected'; }?> value="47">ดร.อัจฉราวดี แก้ววรรณดี</option>
+                <option <?php if($ID_Leader == '48'){ echo 'selected'; }?> value="48">อ.คมกฤต เมฆสกุล</option>
+                <option <?php if($ID_Leader == '49'){ echo 'selected'; }?> value="49">อ. พงศ์วิทย์ พรมสุวรรณ</option>
+                <option <?php if($ID_Leader == '50'){ echo 'selected'; }?> value="50">ดร. อภิศักดิ์ วิทยาประภากร</option>
+                <option <?php if($ID_Leader == '51'){ echo 'selected'; }?> value="51">อ. อธิคม บุญซื่อ</option>
+                <option <?php if($ID_Leader == '52'){ echo 'selected'; }?> value="52">อ. เอกชัย แผ่นทอง</option>
+                <option <?php if($ID_Leader == '53'){ echo 'selected'; }?> value="53">อ. อโณทัย กล้าการขาย</option>
+                <option <?php if($ID_Leader == '54'){ echo 'selected'; }?> value="54">นางสาวพิมพ์ผกา แก้วษา</option>
+                <option <?php if($ID_Leader == '55'){ echo 'selected'; }?> value="55">นายกิตติ ไพเจริญ</option>
+                <option <?php if($ID_Leader == '56'){ echo 'selected'; }?> value="56">นางสาวรสนันท์ เอื้อพิทักษ์สกุล</option>
+                <option <?php if($ID_Leader == '57'){ echo 'selected'; }?> value="57">นางสาวศิริเพ็ญ บุญสม</option>
+                <option <?php if($ID_Leader == '58'){ echo 'selected'; }?> value="58">ว่าที่ ร.ต. หญิงสุพัตรา ใจมูลมั่ง</option>
+                <option <?php if($ID_Leader == '59'){ echo 'selected'; }?> value="59">นางกตัญชลี วันแก้ว</option>
+                <option <?php if($ID_Leader == '60'){ echo 'selected'; }?> value="60">นางสาวกันติชา ราชคม</option>
+                <option <?php if($ID_Leader == '61'){ echo 'selected'; }?> value="61">นายรณภัทร อักษรศิริ</option>
+                <option <?php if($ID_Leader == '62'){ echo 'selected'; }?> value="62">นายธนัตถ์กานต์ ใจสวัสดิ์</option>
+                <option <?php if($ID_Leader == '63'){ echo 'selected'; }?> value="63">นายเฉลิมรัฐ เกาะแก้ว</option>
+                <option <?php if($ID_Leader == '64'){ echo 'selected'; }?> value="64">นางสาวสุทธิดา ใจมูลมั่ง</option>
+                <option <?php if($ID_Leader == '65'){ echo 'selected'; }?> value="65">นางสาวกายรวี ฟูแสง</option>
+            </select> </p>
 
         <div>
         <p style="font-weight: bold;"><input type="checkbox" class="checkbox" name="TypeMember_Re"  id="AddMember_Re" value="1" <?php if($type_stakeholder==1){echo 'checked';} ?>> มีผู้ร่วมวิจัย
@@ -422,7 +528,33 @@ input[type="submit"]:hover{
 
             
                 <p id="ShowAddMember_Re" style="display:none" >
-                <?php if(mysqli_num_rows($member_query)==0){
+                <?php
+                if($type_stakeholder==1){
+                    $sql_count = "SELECT COUNT(*)  AS AllMember FROM re_member WHERE Re_ID = '$Re_id'";
+                    $count_query = mysqli_query($conn,$sql_count);
+                    $rowCount = mysqli_fetch_assoc($count_query);
+                    
+                    
+                    echo "<p> จำนวนผู้ร่วมวิจัย : <input type='text' id='Mebmer_Num' placeholder='จำนวนผู้วิจัย' value=".$rowCount['AllMember']." class='Member_NumRe'> /คน";
+                    echo"<button type='button' class='But-AddMem' id='AddMem' onclick='add()'>ยืนยัน</button> </p> ";
+                    echo "<div id='new_chq'>";
+                    if(mysqli_num_rows($member_query)>0){
+                    while ($member_row = mysqli_fetch_assoc($member_query)){
+                        $Num = 1;
+                        $member_name = $member_row['MemberName'];
+                        $member_no = $member_row['NO'];
+                        echo "<input type='text'  name='no[]' value='$member_no' style='display: none;'>";
+                        echo" <input type='text' class='MemberResearch' value='$member_name' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ ".$Num."' required >";
+                        }
+                        $Num++;
+                    }
+                    echo "</div>";
+                    echo " <input type='hidden' value='1' id='total_chq'>";
+                }
+                
+
+                ?>
+                <!-- <?php if(mysqli_num_rows($member_query)==0){
                     echo "<input type='text' class='Member_Re' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 1'>";
                     echo "<input type='text' class='Member_Re' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 2'>";
                     echo "<input type='text' class='Member_Re' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 3'>";
@@ -457,7 +589,7 @@ input[type="submit"]:hover{
                         }
                 }
                 
-                 ?>
+                 ?> -->
                 </p>
 
         </div>

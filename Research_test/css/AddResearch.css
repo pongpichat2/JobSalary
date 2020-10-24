@@ -310,15 +310,23 @@ background: #0a4b33;
     padding-right: 0;
 }
 }
+.Bugget_Re thead td{
+    text-align: center;
+    font-weight: bold;
+}
 .Bugget_Re tbody .tr-non_input .non_input{
     background: rgba(138, 138, 138, 0.46);
 }
 .Bugget_Re tbody .tr-non_input .non_input input[type='number']{
+    font-family: 'Sarabun', sans-serif;
+    height: 100%;
     border: none;
     width: 100%;
     background: none;
 }
 .Bugget_Re tbody tr input[type='number']{
+    height: 100%;
+    font-family: 'Sarabun', sans-serif;
     border: none;
     box-shadow: none;
     width: 100%;
@@ -326,7 +334,6 @@ background: #0a4b33;
 }
 .Leader_Research{
     border: 2px solid black;
-    
 }
 .FormAddRe .Member_NumRe{
     text-align: center;
@@ -349,4 +356,19 @@ background: #0a4b33;
 }
 .FormAddRe .MemberResearch:focus{
     box-shadow: 0 0 0 4px rgba(105, 177, 230, 0.81);
+}
+.FormAddRe .But-AddMem{
+    font-family: 'Sarabun', sans-serif;
+    font-weight: bold;
+    margin-left: 20px;
+    width: 60px;
+    height: 30px;
+    border: 2px solid black;
+    background: none;
+    transition: 0.6s;
+}
+.FormAddRe .But-AddMem:hover{
+    border-radius: 10px;
+    box-shadow: 1px 1px 0 black;
+    background-color: rgba(105, 177, 230, 0.81);
 }

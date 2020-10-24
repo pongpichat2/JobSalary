@@ -15,6 +15,8 @@ session_start();
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300&display=swap" rel="stylesheet">
      
     <link rel="stylesheet" href="css/AddResearch.css">
+    <script src="js/AddResearch.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <title>Document</title>
 </head>
 
@@ -25,6 +27,7 @@ session_start();
             <li class="logo"><a href="#">Eng Up</a></li>
             <li class="item button secondary"><a href="AddResearch.php">เพิ่มข้อมูล</a></li>
             <li class="item button secondary"><a href="edit.php">วิจัย</a></li>
+            <li class="item button secondary"><a href="Bugfaculty.php">รายได้คณะ</a></li>
             <p style="color: white;"><?php echo $_SESSION['emailAdmin']; ?></p>
             <li class="item button secondary"><a href="logout.php">Log out</a></li>
         </ul>
@@ -35,6 +38,7 @@ session_start();
         <form action="insertResearch.php" method="POST">
             <p style="font-weight: bold;">ชื่อหัวหน้าโครงงาน :
             <select name="Leader_Re" class="Leader_Research" id="">
+                <option value="" selected disabled hidden>โปรดเลือกหัวหน้าโครงงาน</option>
                 <option value="1">ผศ.ดร. วสันต์ คำสนาม</option>
                 <option value="2">ผศ.ดร. สุทธินันท์ ศรีรัตยาวงค์</option>
                 <option value="3">ผศ.ดร. นพรัตน์ เกตุขาว</option>
@@ -109,13 +113,11 @@ session_start();
                     <div id="ShowAddMember_Re" style="display:none">
                         
                             <p> จำนวนผู้ร่วมวิจัย : <input type="text" id="Mebmer_Num" placeholder="จำนวนผู้วิจัย" class="Member_NumRe"> /คน 
-                            <button type="button" id="AddMem" onclick="add()">ยืนยัน</button> </p> 
+                            <button type="button" class="But-AddMem" id="AddMem" onclick="add()">ยืนยัน</button> </p> 
                             <div id="new_chq"></div>
                             <input type="hidden" value="1" id="total_chq">
-                        <!-- <input type="text" class="Member_Re" name="Member[]" id="" placeholder="ผู้ร่วมวิจัยคนที่ 1">
-                        <input type="text" class="Member_Re" name="Member[]" id="" placeholder="ผู้ร่วมวิจัยคนที่ 2">
-                        <input type="text" class="Member_Re" name="Member[]" id="" placeholder="ผู้ร่วมวิจัยคนที่ 3"> -->
-                        
+
+
                     </div>
 
             </div>
@@ -126,6 +128,7 @@ session_start();
             ชื่อโครงงาน : <input type="text" class="Re_Name" id="" placeholder="TH" name="NameRe_TH" required>
             ภาษาอังกฤษ : <input type="text" class="Re_Name" name="NameRe_Eng" id="" placeholder="EN" required></p> 
                 <p style="font-weight: bold;"> ประเภทงานวิจัย : <Select id="Type_Re" name ="Type_Re" onchange="yesCheck(this);">
+                    <option value="" selected disabled hidden>โปรดเลือกประเภทงานวิจัย</option>
                     <option value="การฝึกอบรม/สัมนา/อภิปรายและบรรยาย">การฝึกอบรม/สัมนา/อภิปรายและบรรยาย</option>
                     <option value="การค้นคว้า/สำรวจ/วิเคราะห์/ทดสอบและตรวจสอบ">การค้นคว้า/สำรวจ/วิเคราะห์/ทดสอบและตรวจสอบ</option>
                     <option value="การให้คำปรึกษาทางวิชาการและวิชาชีพ">การให้คำปรึกษาทางวิชาการและวิชาชีพ</option>
@@ -180,9 +183,9 @@ session_start();
                     </div>
 
                 </div>
-                <div> <p style="font-weight: bold;"> งบประมาณ : <input type="text" name="Bugget" class="Other" class="Buggle" required > / บาท </div></p>
-
-                <table border="2px" class="Bugget_Re">
+                <!-- <div> <p style="font-weight: bold;"> งบประมาณ : <input type="text" name="Bugget" class="Buggle" required > / บาท </p></div> -->
+                <p style="font-weight: bold; margin-left:100px; margin-top:40px;" >งบประมาณ</p>
+                <table border="2px" style="margin-left: 100px; " class="Bugget_Re">
                     <thead>
                         <tr>
                         <td>ค่า/งวด</td>
@@ -194,25 +197,25 @@ session_start();
                     </thead>
                     <tbody>
                         <tr>
-                            <td>จำนวน</td>
-                            <td><input type="number" class="cost" id="cost-one"  pattern="0-9" title="กรอกได้เฉพาะตัวเลขเท่านั้น"></td>
-                            <td><input type="number" class="cost" id="cost-two" pattern="0-9" title="กรอกได้เฉพาะตัวเลขเท่านั้น"></td>
-                            <td><input type="number" class="cost" id="cost-tree" pattern="0-9" title="กรอกได้เฉพาะตัวเลขเท่านั้น"></td>
-                            <td class="non_input"><input id="sum-cost" type="number" placeholder="รวม" readonly></td>
+                            <td style="text-align: center; font-weight:bold;" >จำนวน</td>
+                            <td><input type="number" name="cost_1" class="cost" id="cost-one" required pattern="0-9" title="กรอกได้เฉพาะตัวเลขเท่านั้น"></td>
+                            <td><input type="number" name="cost_2" class="cost" id="cost-two" required pattern="0-9" title="กรอกได้เฉพาะตัวเลขเท่านั้น"></td>
+                            <td><input type="number" name="cost_3" class="cost" id="cost-tree" required pattern="0-9" title="กรอกได้เฉพาะตัวเลขเท่านั้น"></td>
+                            <td class="non_input"><input id="sum-cost" name="Bugget" type="number" placeholder="รวม" readonly></td>
                         </tr>
                         <tr class="tr-non_input">
-                            <td ><input type="checkbox" class="Checkbox-Bugget"  name="" id="">ค่าบำรุง 40%</td>
-                            <td class="non_input"><input id="cost-one-vat" class="vat" type="number"  readonly></td>
-                            <td class="non_input"><input id="cost-two-vat" class="vat" type="number" readonly></td>
-                            <td class="non_input"><input id="cost-tree-vat" class="vat" type="number" readonly></td>
-                            <td class="non_input"><input id="sum-cost-vat" type="number" readonly></td>
+                            <td ><input type="checkbox" class="Checkbox-Bugget" value="2" name="type_vat_Re" id="">ค่าบำรุง 40%</td>
+                            <td class="non_input"><input id="cost-one-vat" name="Vat1" class="vat" type="number"  readonly></td>
+                            <td class="non_input"><input id="cost-two-vat" name="Vat2" class="vat" type="number" readonly></td>
+                            <td class="non_input"><input id="cost-tree-vat" name="Vat3" class="vat" type="number" readonly></td>
+                            <td class="non_input"><input id="sum-cost-vat" name="Vat_total" type="number" readonly></td>
                         </tr>
                         <tr class="tr-non_input">
-                            <td ><input type="checkbox" class="Checkbox-Bugget-faculty"  name="" id="">คณะ 5%</td>
-                            <td class="non_input"><input id="cost-one-vat-faculty" class="vat-faculty" type="number"  readonly></td>
-                            <td class="non_input"><input id="cost-two-vat-faculty" class="vat-faculty" type="number" readonly></td>
-                            <td class="non_input"><input id="cost-tree-vat-faculty" class="vat-faculty" type="number" readonly></td>
-                            <td class="non_input"><input id="sum-cost-vat-faculty" type="number" readonly></td>
+                            <td ><input type="checkbox" class="Checkbox-Bugget-faculty" value="2" name="type_vat_faculty" id="">คณะ 5%</td>
+                            <td class="non_input"><input id="cost-one-vat-faculty" name="vat_facul1" class="vat-faculty" type="number"  readonly></td>
+                            <td class="non_input"><input id="cost-two-vat-faculty" name="vat_facul2" class="vat-faculty" type="number" readonly></td>
+                            <td class="non_input"><input id="cost-tree-vat-faculty" name="vat_facul3" class="vat-faculty" type="number" readonly></td>
+                            <td class="non_input"><input id="sum-cost-vat-faculty" name="vat_facul_total" type="number" readonly></td>
                         </tr>
                     </tbody>
                 </table>
@@ -232,6 +235,7 @@ session_start();
             <div>
                 <p style="font-weight: bold;">
                 สถานะโครงการ : <select name="approve_Type" id="">
+                    <option value="" selected disabled hidden>โปรดเลือกสถานะโครงการ</option>
                     <option value="1">เสนอโครงการ</option>
                     <option value="2">เซ็นสัญญา</option>
                     <option value="3">ขออนุมัติดำเนินโครงการ</option>
@@ -283,382 +287,7 @@ session_start();
 
     
 </body>
-<script>
-    $(document).ready(function(){
-        // checkbox code ผุ้ร่วมวิจัย 
-        $('.checkbox').click(function(){
-            $('.checkbox').each(function(){
-                $(this).prop('checked', false); 
-            }); 
-            $(this).prop('checked', true);
-        });
-        $('.checkbox1').click(function(){
-            $('.checkbox1').each(function(){
-                $(this).prop('checked', false); 
-            }); 
-            $(this).prop('checked', true);
-        });
-        $('.checkbox2').click(function(){
-            $('.checkbox2').each(function(){
-                $(this).prop('checked', false); 
-            }); 
-            $(this).prop('checked', true);
-        });
-        $('.checkbox3').click(function(){
-            $('.checkbox3').each(function(){
-                $(this).prop('checked', false); 
-            }); 
-            $(this).prop('checked', true);
-        });
-        $('.checkbox4').click(function(){
-            $('.checkbox4').each(function(){
-                $(this).prop('checked', false); 
-            }); 
-            $(this).prop('checked', true);
-        });
 
-        $(function () {
-        $("#AddMember_Re").click(function () {
-            if ($(this).is(":checked")) {
-                $("#ShowAddMember_Re").show();
-            } else {
-                $("#ShowAddMember_Re").hide();
-            }
-        });
-        $("#AddMember_Re2").click(function () {
-                  if ($(this).is(":checked")) {
-                      $("#ShowAddMember_Re").hide();
-                  } else {
-                      $("#ShowAddMember_Re").hide();
-                  }
-        });
-    });
-    //checkbox code ผลงานตีพิมพ์
-    $(function () {
-    $("#Working").click(function () {
-            if ($(this).is(":checked")) {
-                $("#ShowWorking").show();
-            } else {
-                $("#ShowWorking").hide();
-            }
-        });
-        $("#Working2").click(function () {
-                  if ($(this).is(":checked")) {
-                      $("#ShowWorking").hide();
-                  } else {
-                      $("#ShowWorking").hide();
-                  }
-        });
-    });
-    //checkbox code งานวิจัยและบริการวิชาการ
-    $(function () {
-    $("#Cap_Reseach").click(function () {
-            if ($(this).is(":checked")) {
-                $("#ShowDetil_TypeRe").show();
-                $("#ShowService_Aca").hide();
-            } else {
-                $("#ShowDetil_TypeRe").hide();
-            }
-        });
-        $("#BoxService_Aca").click(function () {
-                  if ($(this).is(":checked")) {
-                      $("#ShowDetil_TypeRe").hide();
-                      $("#ShowService_Aca").show();
-                  } else {
-                      $("#ShowDetil_TypeRe").hide();
-                      
-                  }
-        });
-    });
-    //checkbox code แหล่งทุนภายในและแหล่งทุนภายนอก
-    $(function () {
-    $("#Capital_Sidein").click(function () {
-            if ($(this).is(":checked")) {
-                $("#ShowCapital_in").show();
-                $("#ShowCapital_out").hide();
-            } else {
-                $("#ShowCapital_in").hide();
-            }
-        });
-        $("#Capital_Sideout").click(function () {
-                  if ($(this).is(":checked")) {
-                    $("#ShowCapital_out").show();
-                      $("#ShowCapital_in").hide();
-                  } else {
-                      $("#ShowCapital_out").hide();
-                      
-                  }
-        });
-    });
-
-        function yesCheck(SelectOther) {
-            var ShowOther = document.getElementById("TypeRe_Other");
-
-            if (SelectOther.value == "Other") {
-                ShowOther.style.display = "block";
-            } else {
-                ShowOther.style.display = "none";
-            }
-        }
-        function CheckCap_Out(Other_Capout) {
-            var ShowOther = document.getElementById("Re_CapOut");
-
-            if (Other_Capout.value == "Other") {
-                ShowOther.style.display = "block";
-            } else {
-                ShowOther.style.display = "none";
-            }
-        }
-        $(function() {
-
-            $('input[name="datefilter"]').daterangepicker({
-                
-                autoUpdateInput: false,
-                locale: {
-                    "format": "DD/MM/YYYY"
-                }
-            });
-
-            $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('DD/MM/YYYY') + '-' + picker.endDate.format('DD/MM/YYYY'));
-            });
-
-            $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
-                $(this).val('');
-            });
-
-        });
-        $(function() {
-
-            $('input[name="Time_period"]').daterangepicker({
-                
-                autoUpdateInput: false,
-                locale: {
-                    "format": "DD/MM/YYYY"
-                }
-            });
-
-            $('input[name="Time_period"]').on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('DD/MM/YYYY') + '-' + picker.endDate.format('DD/MM/YYYY'));
-            });
-
-            $('input[name="Time_period"]').on('cancel.daterangepicker', function(ev, picker) {
-                $(this).val('');
-            });
-
-        });
-
-        $(function() {
-            $('input[name="DateDocument"]').daterangepicker({
-                // autoUpdateInput: false,
-                singleDatePicker: true,
-                showDropdowns: true,
-                minYear: 1900,
-                locale: {
-                    "format": "DD/MM/YYYY"
-                }
-                
-            });
-            
-        });
-
-
-        $(function(){
-           
-            $('.cost').on('input',function(){
-                var sum_cost = 0;
-                $('.cost').each(function(){
-                    var total_cost = $(this).val();
-                    if($.isNumeric(total_cost)){
-                        sum_cost += parseFloat(total_cost);
-                    }
-                $('#sum-cost').val(sum_cost)
-                });
-                
-
-                var sum_cost_vat = 0;
-                $('.vat').each(function(){
-                    var total_cost_vat = $(this).val();
-                    if($.isNumeric(total_cost_vat)){
-                        sum_cost_vat += parseFloat(total_cost_vat);
-                    }
-                    $('#sum-cost-vat').val(sum_cost_vat)
-                });
-                
-
-               
-                var sum_cost_vat_faculty = 0;
-                $('.vat-faculty').each(function(){
-                    var total_cost_vat_faculty = $(this).val();
-                    if($.isNumeric(total_cost_vat_faculty)){
-                        sum_cost_vat_faculty += parseFloat(total_cost_vat_faculty);
-                    }
-                    
-                });
-                $('#sum-cost-vat-faculty').val(sum_cost_vat_faculty)
-               
-            });
-            // var sum_cost = parseFloat(costone)+parseFloat(costtwo)+parseFloat(costtree)
-            
-        });
-
-        $('.Checkbox-Bugget').click(function(){
-            if ($(this).is(":checked")){
-                var costone = document.getElementById('cost-one').value;
-                var costone_maintain = costone*0.4
-                $('#cost-one-vat').val(costone_maintain);
-
-                var costtwo = document.getElementById('cost-two').value;
-                var costtwo_maintain = costtwo*0.4
-                $('#cost-two-vat').val(costtwo_maintain);
-
-                var costtree = document.getElementById('cost-tree').value;
-                var costtree_maintain = costtree*0.40
-                $('#cost-tree-vat').val(costtree_maintain);
-
-                $('#cost-one').on('input',function(){
-                    var costone = document.getElementById('cost-one').value;
-                    var costone_maintain = costone*0.40
-     
-                    $('#cost-one-vat').val(costone_maintain);
-                    
-                });
-                $('#cost-two').on('input',function(){
-                    var costtwo = document.getElementById('cost-two').value;
-                    var costtwo_maintain = costtwo*0.40
-  
-                    $('#cost-two-vat').val(costtwo_maintain);
-
-                });
-                $('#cost-tree').on('input',function(){
-                    var costtree = document.getElementById('cost-tree').value;
-                    var costtree_maintain = costtree*0.40
-                    $('#cost-tree-vat').val(costtree_maintain);
-                });
-            
-            
-                var sum_cost_vat = 0;
-                
-                $('.vat').each(function(){
-                    var total_cost_vat = $(this).val();
-                    if($.isNumeric(total_cost_vat)){
-                        sum_cost_vat += parseFloat(total_cost_vat);
-                    }
-                });
-                $('#sum-cost-vat').val(sum_cost_vat)
-
-
-                
-                
-
-            }
-            else{
-                $('#cost-one-vat').val("");
-                $('#cost-two-vat').val("");
-                $('#cost-tree-vat').val("");
-                $('#sum-cost-vat').val("")
-            }
-
-        });
-        $('.Checkbox-Bugget-faculty').click(function(){
-            if ($(this).is(":checked")){
-                var costone = document.getElementById('cost-one').value;
-                var costone_faculty = costone*0.05
-                $('#cost-one-vat-faculty').val(costone_faculty);
-
-                var costtwo = document.getElementById('cost-two').value;
-                var costtwo_faculty = costtwo*0.05
-                $('#cost-two-vat-faculty').val(costtwo_faculty);
-
-                var costtree = document.getElementById('cost-tree').value;
-                var costtree_faculty = costtree*0.050
-                $('#cost-tree-vat-faculty').val(costtree_faculty);
-
-                $('#cost-one').on('input',function(){
-                    var costone = document.getElementById('cost-one').value;
-                    var costone_faculty = costone*0.050
-     
-                    $('#cost-one-vat-faculty').val(costone_faculty);
-                    
-                });
-                $('#cost-two').on('input',function(){
-                    var costtwo = document.getElementById('cost-two').value;
-                    var costtwo_faculty = costtwo*0.050
-  
-                    $('#cost-two-vat-faculty').val(costtwo_faculty);
-
-                });
-                $('#cost-tree').on('input',function(){
-                    var costtree = document.getElementById('cost-tree').value;
-                    var costtree_faculty = costtree*0.050
-                    $('#cost-tree-vat-faculty').val(costtree_faculty);
-                });
-            
-            
-                var sum_cost_vat_faculty = 0;
-                $('.vat-faculty').each(function(){
-                    var total_cost_vat_faculty = $(this).val();
-                    if($.isNumeric(total_cost_vat_faculty)){
-                        sum_cost_vat_faculty += parseFloat(total_cost_vat_faculty);
-                    }
-                });
-
-                $('#sum-cost-vat-faculty').val(sum_cost_vat_faculty)
-
-                // $('.vat-faculty').on('keyup change',function(){
-                //     var sum_cost_vat_faculty = 0;
-                //     $('.vat-faculty').each(function(){
-                //         var total_cost_vat_faculty = $(this).val();
-                //         if($.isNumeric(total_cost_vat_faculty)){
-                //             sum_cost_vat_faculty += parseFloat(total_cost_vat_faculty);
-                //         }
-                //     });
-                //     $('#sum-cost-vat-faculty').val(sum_cost_vat_faculty)
-                // });
-
-            }
-            else{
-                $('#cost-one-vat-faculty').val("");
-                $('#cost-two-vat-faculty').val("");
-                $('#cost-tree-vat-faculty').val("");
-                $('#sum-cost-vat-faculty').val("");
-            }
-
-        });
-
-        
- 
-    });
-
- 
-    function add(){
-        $("#new_chq").empty();
-       
-        var i= document.getElementById("Mebmer_Num").value ;
-        
-        for (Num = 1; Num <= i; Num++) {
-
-            var new_input="<input type='text' class='MemberResearch' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required >";
-            // var new_input="<input type='text' class='' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ><button type='button' class='but-Delete' onclick='remove();' id='MemberRe_"+Num+"'>x</button>";
-            $('#new_chq').append(new_input);
-            $('#total_chq').val(i)
-        }
-
-    
-    }
-    
-    // function remove(){
-    //     var last_chq_no = $('#total_chq').val();
-    //     if(last_chq_no>0){
-    //     $('#Member_'+last_chq_no).remove();
-    //     $('#MemberRe_'+last_chq_no).remove();
-    //     $('#Subbut_'+last_chq_no).remove();
-    //     $('#br_'+last_chq_no).remove();
-    //     $('#total_chq').val(last_chq_no-1);
-    //     }
-    // }
-        
-</script>
 
 
 </html>

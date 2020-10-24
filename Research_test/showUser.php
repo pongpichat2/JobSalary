@@ -305,7 +305,7 @@ box-shadow: 1px 1px 0 black;
 <nav>
         <ul class="menu">
             
-            <li class="item button"><a href="#" id="login">Login</a></li>
+            <li class="item button"><a href="Login.php" id="login">Login</a></li>
             
             <div class="arrow-up"></div>
         </ul>
@@ -324,12 +324,12 @@ box-shadow: 1px 1px 0 black;
     </nav>
     <?php
     //leader_name and status_stake
-    $leader_sql = "SELECT * FROM research WHERE Re_ID = '$Re_id'";
+    $leader_sql = "SELECT * FROM research INNER JOIN name_leader ON research.ID_Leader = name_leader.ID_Leader WHERE Re_ID = '$Re_id'";
     // echo $leader_sql;
     $leader_query = mysqli_query($conn,$leader_sql);
     if(mysqli_num_rows($leader_query)==1){
         $row_research = mysqli_fetch_assoc($leader_query);
-        $leader_name = $row_research['Name_leader'];
+        $leader_name = $row_research['Name_Leader'];
         $type_stakeholder = $row_research['Status_stake'];
         $NameRe_TH = $row_research['NameRe_TH'];
         $NameRe_ENG = $row_research['NameRe_ENG'];
@@ -524,38 +524,38 @@ box-shadow: 1px 1px 0 black;
     $(document).ready(function() {
     $('#example').DataTable();
 } );
-//สำหรับ show dropdown
-$(document).ready(function(){
-        var arrow = $(".arrow-up");
-        var form = $(".login-form");
-        var status = false;
-        $("#login").click(function(event){
-            event.preventDefault();
-            if(status == false){
-                arrow.fadeIn();
-                form.fadeIn();
-                status = true;
-            }else{
-                arrow.fadeOut();
-                form.fadeOut();
-                status = false;
-            }
-        })
+// //สำหรับ show dropdown
+// $(document).ready(function(){
+//         var arrow = $(".arrow-up");
+//         var form = $(".login-form");
+//         var status = false;
+//         $("#login").click(function(event){
+//             event.preventDefault();
+//             if(status == false){
+//                 arrow.fadeIn();
+//                 form.fadeIn();
+//                 status = true;
+//             }else{
+//                 arrow.fadeOut();
+//                 form.fadeOut();
+//                 status = false;
+//             }
+//         })
 
-    })
-    //script สำหรับทำ responsive web
-    $(function() {
-            $(".toggle").on("click", function(){
-                if($(".item").hasClass("active")){
-                    $(".item").removeClass("active");
+//     })
+//     //script สำหรับทำ responsive web
+//     $(function() {
+//             $(".toggle").on("click", function(){
+//                 if($(".item").hasClass("active")){
+//                     $(".item").removeClass("active");
                     
-                }
-                else{
-                    $(".item").addClass("active");
+//                 }
+//                 else{
+//                     $(".item").addClass("active");
 
-                }
-            })
-        });
+//                 }
+//             })
+//         });
 </script>
 
 

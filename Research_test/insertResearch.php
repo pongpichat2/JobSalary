@@ -1,4 +1,7 @@
 <?php
+
+use function PHPSTORM_META\type;
+
 require('connect.php');
 $LeaderName = "";
 //  รับค่าเป็น Array
@@ -23,7 +26,22 @@ $Agencyout = "";
 $Agencyout_service = "";
 $Agencyout_other = "";
 
+$cost1 = "";
+$cost2 = "";
+$cost3 = "";
 $Bugget = "";
+
+$vat1 = "";
+$vat2 = "";
+$vat3 = "";
+$vat_total = "";
+
+$vat_facul1 = "";
+$vat_facul2 = "";
+$vat_facul3 = "";
+$vat_facul_total = "";
+
+
 $dateperiod = "";
 $Approve_Type = "";
 $Time_period = "";
@@ -35,6 +53,7 @@ $ISSUE = "";
 $PageNo  = "";
 $NO_Edit = "";
 $Re_id_Edit = "";
+
 if(isset($_POST['Re_id_Edit'])) $Re_id_Edit = $_POST['Re_id_Edit'];
 if(isset($_POST['no'])) $NO_Edit = $_POST['no'];
 if(isset($_POST['Leader_Re'])) $LeaderName = $_POST['Leader_Re'];
@@ -60,27 +79,65 @@ if(isset($_POST['Type_funds_out'])) $type_funds_out = $_POST['Type_funds_out'];
 if(isset($_POST['Agency_out'])) $Agencyout = $_POST['Agency_out'];
 if(isset($_POST['Agency_out_other'])) $Agencyout_other = $_POST['Agency_out_other'];
 if(isset($_POST['Agency_out_service'])) $Agencyout_service = $_POST['Agency_out_service'];
-// $But_Sub = "";
-// $Re_id_De = "";
+
 if(isset($_POST['but_Submit'])) $But_Sub = $_POST['but_Submit'];
-if(isset($_POST['but_Submit'])) $Re_id_De = $_POST['Re_id_Edit'];
-// $But_Sub = $_POST['but_Submit'];
-// echo $But_Sub;
-// $But_Sub = "Insert";
-// echo $Re_id_Edit;
-// echo $But_Sub;
-// $Re_id_De = $_REQUEST['Re_id_Delete'];
-// $Re_id_De = "Update";
+if(isset($_POST['Re_id_Edit'])) $Re_id_De = $_POST['Re_id_Edit'];
+
+if(isset($_POST['cost_1'])) $cost1 = $_POST['cost_1'];
+if(isset($_POST['cost_2'])) $cost2 = $_POST['cost_2'];
+if(isset($_POST['cost_3'])) $cost3 = $_POST['cost_3'];
+
+if(isset($_POST['Vat1'])) $vat1 = $_POST['Vat1'];
+if(isset($_POST['Vat2'])) $vat2 = $_POST['Vat2'];
+if(isset($_POST['Vat3'])) $vat3 = $_POST['Vat3'];
+if(isset($_POST['Vat_total'])) $vat_total = $_POST['Vat_total'];
+
+if(isset($_POST['vat_facul1'])) $vat_facul1 = $_POST['vat_facul1'];
+if(isset($_POST['vat_facul2'])) $vat_facul2 = $_POST['vat_facul2'];
+if(isset($_POST['vat_facul3'])) $vat_facul3 = $_POST['vat_facul3'];
+if(isset($_POST['vat_facul_total'])) $vat_facul_total = $_POST['vat_facul_total'];
+
+
+$type_vat = $_POST['type_vat_Re'];
+$type_vat_faculty = $_POST['type_vat_faculty'];
+// echo "ค่าบำรุง".$type_vat."<br>";
+// echo "ค่าคณะ".$type_vat_faculty;
 
 if($But_Sub == 'Insert'){
+
         // Add table research
+    $Re_ID = $NameRe_TH."_".uniqid();
     if ($TypeRe == "Other"){
         $TypeRe = $Type_ReOther;
     }
-    $Re_ID = $NameRe_TH."_".uniqid();
+    if ($type_vat == '1'){
+        $type_vat = 1;
+        
+        $sql_vat = "INSERT INTO vat (Re_ID, Vat1, Vat2, Vat3, Vat_total) Value ('$Re_ID','$vat1','$vat2','$vat3','$vat_total')";
 
-    $sqlResearch = "INSERT INTO research (Re_ID, Name_Leader, NameRe_TH, NameRe_ENG, Type_research, Bugget, Time_period, Status_stake, Approve_status, Time_period_approve, Published_status, Funds_status) 
-            Value ('$Re_ID','$LeaderName','$NameRe_TH','$NameRe_Eng','$TypeRe','$Bugget','$dateperiod','$StatusMemRe', '$Approve_Type' ,'$Time_period', '$Published_Status', '$Status_Funds')";
+        if ($conn->query($sql_vat) === TRUE) {
+            echo "New record created successfully";
+          } else {
+            echo "Error: " . $sql_vat . "<br>" . $conn->error;
+          }
+    }
+    else{
+        $type_vat = 2;
+    }
+
+    if ($type_vat_faculty == '1'){
+        $type_vat_faculty = 1;
+        $sql_vat_faculty = "INSERT INTO vat_faculty (Re_ID, faculty1, faculty2, faculty3, faculty_total) Value ('$Re_ID','$vat_facul1','$vat_facul2','$vat_facul3','$vat_facul_total')";
+  
+        $vat_faculry = mysqli_query($conn,$sql_vat_faculty);
+    }
+    else{
+        $type_vat_faculty = 2;
+    }
+    
+
+    $sqlResearch = "INSERT INTO research (Re_ID, ID_Leader, NameRe_TH, NameRe_ENG, Type_research, cost1, cost2, cost3, Bugget, ID_vat, ID_faculty, Time_period, Status_stake, Approve_status, Time_period_approve, Published_status, Funds_status) "; 
+    $sqlResearch .= "Value ('$Re_ID','$LeaderName','$NameRe_TH','$NameRe_Eng','$TypeRe','$cost1','$cost2','$cost3','$Bugget','$type_vat','$type_vat_faculty','$dateperiod','$StatusMemRe', '$Approve_Type' ,'$Time_period', '$Published_Status', '$Status_Funds')";
 
     $result = mysqli_query($conn,$sqlResearch);
 
@@ -149,7 +206,7 @@ elseif($But_Sub == 'Update'){
         }
         elseif($Published_Status == "2"){
             $sqlDelete = "DELETE published WHERE Re_ID = '$Re_id_Edit'";
-            $resultDelete3 = mysqli_query($conn,$sqlPublished);
+            $resultDelete3 = mysqli_query($conn,$sqlDelete);
         }
     
         // กองทุนภายใน
@@ -209,10 +266,10 @@ elseif($But_Sub == 'Update'){
                 $MemberName_delete0_query = mysqli_query($conn,$MemberName_delete0);
             } 
         }
-    echo "<script>";
-    echo "alert('อัพเดทข้อมูลสำเร็จ !');";
-    echo "window.location='edit.php';";
-    echo "</script>";
+    // echo "<script>";
+    // echo "alert('อัพเดทข้อมูลสำเร็จ !');";
+    // echo "window.location='edit.php';";
+    // echo "</script>";
     // header("Location:edit.php");
 
     
@@ -220,7 +277,7 @@ elseif($But_Sub == 'Update'){
 }
 elseif($But_Sub == 'Delete'){
     $Delete_sql = "DELETE FROM research WHERE Re_ID = '$Re_id_De'";
-    // echo $Delete_sql;
+    echo $Delete_sql;
     $Delete_query = mysqli_query($conn,$Delete_sql);
 
 

@@ -5,8 +5,9 @@ if(isset($_SESSION['emailAdmin'])) {
     header("Location:edit.php");
 }
 // $sql = "SELECT * FROM (research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)";
-$sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)"
-        ."INNER JOIN approve_status ON research.Approve_status = approve_status.Approve_ID)";
+$sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)
+INNER JOIN approve_status ON research.Approve_status = approve_status.Approve_ID)
+INNER JOIN name_leader ON research.ID_Leader = name_leader.ID_Leader)";
 // echo $sql;
 
 
@@ -335,7 +336,7 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
          echo "<form action='detail.php'>";       
          echo "<tr>";
         //  echo "<td id='tdd'><input type='text' size='1' name='status_id' value=" .$row['No']. " readonly></td>" 
-         echo "<th scope='row'>". $row['Name_leader'] ."</th>" 
+         echo "<th scope='row'>". $row['Name_Leader'] ."</th>" 
          ."<td>". $row['NameRe_TH'] ."</td>"
          ."<td id='tdd'>". $row['Time_period'] ."</td>"
          ."<td id='tdd'>"; if($publish_status == 1){
@@ -352,7 +353,8 @@ $sql = "SELECT * FROM ((research INNER JOIN fundsstatus ON research.Funds_Status
     
     }
     ?> 
-
+</tbody>
+</table>
 </body>
     
     

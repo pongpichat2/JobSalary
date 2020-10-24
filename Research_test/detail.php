@@ -344,6 +344,7 @@ input[type="submit"]:hover{
             <li class="logo"><a href="#">Eng Up</a></li>
             <li class="item button secondary"><a href="AddResearch.php">เพิ่มข้อมูล</a></li>
             <li class="item button secondary"><a href="edit.php">วิจัย</a></li>
+            <li class="item button secondary"><a href="Bugfaculty.php">รายได้คณะ</a></li>
             <p style="color: white;"><?php echo $_SESSION['emailAdmin']; ?></p>
             <li class="item button secondary"><a href="logout.php">Log out</a></li>
         </ul>
@@ -351,12 +352,12 @@ input[type="submit"]:hover{
     </nav>
     <?php
     //leader_name and status_stake
-    $leader_sql = "SELECT * FROM research WHERE Re_ID = '$Re_id'";
-    // echo $leader_sql;
+    $leader_sql = "SELECT * FROM research INNER JOIN name_leader ON research.ID_Leader = name_leader.ID_Leader WHERE Re_ID = '$Re_id'";
+
     $leader_query = mysqli_query($conn,$leader_sql);
     if(mysqli_num_rows($leader_query)==1){
         $row_research = mysqli_fetch_assoc($leader_query);
-        $leader_name = $row_research['Name_leader'];
+        $leader_name = $row_research['Name_Leader'];
         $type_stakeholder = $row_research['Status_stake'];
         $NameRe_TH = $row_research['NameRe_TH'];
         $NameRe_ENG = $row_research['NameRe_ENG'];
