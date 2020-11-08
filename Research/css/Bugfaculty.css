@@ -1,15 +1,16 @@
-*{
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-}
 body{
-    font-family: sans-serif;
-    background: hotpink;
+    height: 100vh;
+    margin: 0;
+    background-size: cover;
+    background-position: center;
+    background: #850303bb;
 }
 nav{
+    top: 0;
     background: #222;
-    padding: 5px 20px;
+    padding: 5px 5px;
+    height: 90px;
+    font-family: 'Sarabun', sans-serif;
 }
 ul{
     list-style-type: none;
@@ -22,8 +23,9 @@ a:hover{
     text-decoration: underline;
 }
 .menu li{
+    height: 30px;
     font-size: 16px;
-    padding: 15px 5px;
+    padding: 5px 5px;
 }
 .menu li a {
     display: block;
@@ -34,54 +36,53 @@ a:hover{
 .botton.secondary {
     border-bottom: 1px #444 solid;
 }
-
 /* Mobile menu */
 .menu{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-}
-.toggle{
+    }
+    .toggle{
     order: 1;
-}
-.item.button{
+    }
+    .item.button{
     order: 2;
-}
-.item{
+    }
+    .item{
     width: 100%;
     text-align: center;
     order: 3;
     display: none;
-}
-.item.active{
+    }
+    .item.active{
     display: block;
-}
-.toggle{
+    }
+    .toggle{
     cursor: pointer;
-}
-.bars{
+    }
+    .bars{
     background: #999;
     display: inline-block;
     height: 2px;
     position: relative;
     width: 18px;
-}
-.bars::before,.bars::after{
+    }
+    .bars::before,.bars::after{
     background: #999;
     content: "";
     display: inline-block;
     height: 2px;
     position: absolute;
     width: 18px;
-}
-.bars::before{
+    }
+    .bars::before{
     top: 5px;
-}
-.bars::after{
+    }
+    .bars::after{
     top: -5px;
-}
-.arrow-up{
+    }
+    .arrow-up{
     width: 0;
     height: 0;
     position: absolute;
@@ -91,8 +92,8 @@ a:hover{
     right: 35px;
     top: 55px;
     display: none;
-}
-.login-form{
+    }
+    .login-form{
     position: absolute;
     width: 300px;
     height: auto;
@@ -102,17 +103,17 @@ a:hover{
     border-radius: 2px;
     border-bottom: 5px solid gray;
     display: none;
-}
-.login-form>form{
+    }
+    .login-form>form{
     width: 250px;
     margin: 25px auto;
     font-size: 16px;
     font-family: sans-serif,Arial;
     color: gray;
     letter-spacing: -0.05em;
-}
-input[type="text"],
-input[type="password"]{
+    }
+    input[type="text"],
+    input[type="password"]{
     width: 240px;
     height: 35px;
     border: 0px;
@@ -123,8 +124,8 @@ input[type="password"]{
     margin-top: 5px;
     font-family: sans-serif,Arial;
     font-size: 16px;
-}
-.label{
+    }
+    .label{
     width: 240px;
     height: 35px;
     border: 0px;
@@ -135,8 +136,8 @@ input[type="password"]{
     margin-top: 5px;
     font-family: sans-serif,Arial;
     font-size: 16px;
-}
-input[type="submit"]{
+    }
+    input[type="submit"]{
     width: 95%;
     height: 35px;
     background: #0b8256;
@@ -149,14 +150,14 @@ input[type="submit"]{
     border-radius: 3px;
     letter-spacing: -0.05em;
     cursor: pointer;
-}
-input[type="submit"]:hover{
+    }
+    input[type="submit"]:hover{
     background: #0a4b33;
-}
-
-
-/* Tablet menu */
-@media all and (min-width:468px){
+    }
+    
+    
+    /* Tablet menu */
+    @media all and (min-width:468px){
     .menu{
         justify-content: center;
     }
@@ -194,8 +195,8 @@ input[type="submit"]:hover{
     .button.secondary a:hover{
         color: #ddd;
     }
-}
-@media all and (min-width:768px){
+    }
+    @media all and (min-width:768px){
     .item{
         display: block;
         width: auto;
@@ -217,5 +218,33 @@ input[type="submit"]:hover{
     }
     .menu li.button{
         padding-right: 0;
+    }
+    }
+.container {
+        width: 100%;
+        background: white ;
+        border: 2px solid;
+        box-shadow: 0 0 15px black;
+        border-radius: 25px;
+    }
+#container {
+        margin-top: 20px;
+    }
+#table {
+
+        margin-top: 20px;
+    }
+#tdd {
+    font-family: 'Sarabun', sans-serif;
+        text-align: center;
+        border: 1px solid black;
+    }
+.table tbody tr td{
+    font-family: 'Sarabun', sans-serif;
+    border: 1px solid black;
+}
+@media (min-width: 992px){
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 95%;
     }
 }

@@ -2,6 +2,17 @@
 require("connect.php");
 session_start();
 $Re_id = $_REQUEST['Re_ID'];
+// $vbvb = $_SESSION['emailAdmin'];
+// echo $vbvb;
+if(!isset($_SESSION['emailAdmin'])) {
+    header("Location:show.php");
+}
+
+// if($_SESSION['refresh']==1){
+//     $_SESSION['refresh'] = 0;
+//     header("location:detail.php");
+// }
+
 
 
 ?>
@@ -16,343 +27,36 @@ $Re_id = $_REQUEST['Re_ID'];
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300&display=swap" rel="stylesheet">
+    <script src="js/editdata1.js"></script>
+    <link rel="stylesheet" href="css/editdata.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <title>Document</title>
 </head>
-<style>
-    body{
-        height: 100vh;
-        margin: 0;
-        background-size: cover;
-        background-position: center;
-        background: #9b2c2c;
-    }
-    .FormAddRe{
-        margin-top: 30px;
-        width: 1000px;
-        background: none;
-        border: 2px solid black;
-        border-radius: 15px;
-        margin-left: 20%;
-        box-shadow: 0 0 15px black;
-        font-family: 'Sarabun', sans-serif;
-    }
-    .FormAddRe .Leader_Name{
-        font-family: 'Sarabun', sans-serif;
-        margin-left: 5px;
-        height: 30px;
-        border: 1.5px solid black;
-        border-radius: 10px;
-        transition: 0.5s;
-    }
-    .FormAddRe .Leader_Name:focus{
-        box-shadow: 0 0 0 4px rgba(105, 177, 230, 0.81);
-    }
-    .FormAddRe .Member_Re{
-        font-family: 'Sarabun', sans-serif;
-        margin-left: 5px;
-        height: 20px;
-        border: 1.5px solid black;
-        border-radius: 10px;
-        transition: 0.5s;
-    }
-    .FormAddRe .Member_Re:focus{
-        box-shadow: 0 0 0 4px rgba(105, 177, 230, 0.81);
-    }
-    .FormAddRe .Re_Name{
-        font-family: 'Sarabun', sans-serif;
-        margin-left: 5px;
-        height: 25px;
-        border: 1.5px solid black;
-        border-radius: 10px;
-        transition: 0.5s;
-    }
-    .FormAddRe .Re_Name:focus{
-        box-shadow: 0 0 0 4px rgba(105, 177, 230, 0.81);
-    }
-    .FormAddRe .Other{
-        font-family: 'Sarabun', sans-serif;
-        margin-left: 5px;
-        height: 25px;
-        border: 1.5px solid black;
-        border-radius: 10px;
-        transition: 0.5s;
-    }
-    .FormAddRe .Other:focus{
-        box-shadow: 0 0 0 4px rgba(105, 177, 230, 0.81);
-    }
-    .FormAddRe .Date-time-approve{
-        font-family: 'Sarabun', sans-serif;
-        margin-left: 5px;
-        height: 25px;
-        width: 150px;
-        border: 1.5px solid black;
-        border-radius: 10px;
-        transition: 0.5s;
 
-    }
-    .FormAddRe .Date-time-approve:focus{
-        box-shadow: 0 0 0 4px rgba(105, 177, 230, 0.81);
-    }
-    .FormAddRe .Btu-Sub{
-
-        font-family: 'Sarabun', sans-serif;
-        font-size: 20px;
-        font-weight: bold;
-        width: 70px;
-        height: 40px;
-        background: white;
-        border: 2px solid black;
-        transition: 0.5s;
-    }
-    .FormAddRe .Btu-Sub:hover{
-        border-radius: 10px;
-        background: rgba(105, 177, 230, 0.81);
-        box-shadow: 1px 1px 0 black;
-    }
-    select{
-        height: 30px;
-        transition: 0.4s;
-        font-family: 'Sarabun', sans-serif;
-    }
-    select:focus{
-        background: rgba(151, 57, 57, 0.7);
-    }
-    nav{
-    top: 0;
-    background: #222;
-    padding: 5px 20px;
-}
-ul{
-    list-style-type: none;
-}
-a{
-    color: white;
-    text-decoration: none;
-}
-a:hover{
-    text-decoration: underline;
-}
-.menu li{
-    height: 30px;
-    font-size: 16px;
-    padding: 5px 5px;
-}
-.menu li a {
-    display: block;
-}
-.logo a {
-    font-size: 20px;
-}
-.botton.secondary {
-    border-bottom: 1px #444 solid;
-}
-
-/* Mobile menu */
-.menu{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-}
-.toggle{
-    order: 1;
-}
-.item.button{
-    order: 2;
-}
-.item{
-    width: 100%;
-    text-align: center;
-    order: 3;
-    display: none;
-}
-.item.active{
-    display: block;
-}
-.toggle{
-    cursor: pointer;
-}
-.bars{
-    background: #999;
-    display: inline-block;
-    height: 2px;
-    position: relative;
-    width: 18px;
-}
-.bars::before,.bars::after{
-    background: #999;
-    content: "";
-    display: inline-block;
-    height: 2px;
-    position: absolute;
-    width: 18px;
-}
-.bars::before{
-    top: 5px;
-}
-.bars::after{
-    top: -5px;
-}
-.arrow-up{
-    width: 0;
-    height: 0;
-    position: absolute;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 20px solid #fff;
-    right: 35px;
-    top: 55px;
-    display: none;
-}
-.login-form{
-    position: absolute;
-    width: 300px;
-    height: auto;
-    background: #fff;
-    right: 10px;
-    top: 70px;
-    border-radius: 2px;
-    border-bottom: 5px solid gray;
-    display: none;
-}
-.login-form>form{
-    width: 250px;
-    margin: 25px auto;
-    font-size: 16px;
-    font-family: sans-serif,Arial;
-    color: gray;
-    letter-spacing: -0.05em;
-}
-input[type="text"],
-input[type="password"]{
-    width: 240px;
-    height: 35px;
-    border: 0px;
-    outline: none;
-    box-shadow: inset 0 0 10px #eee;
-    border-radius: 5px;
-    border-bottom: 10px;
-    margin-top: 5px;
-    font-family: sans-serif,Arial;
-    font-size: 16px;
-}
-.label{
-    width: 240px;
-    height: 35px;
-    border: 0px;
-    outline: none;
-    box-shadow: inset 0 0 10px #eee;
-    border-radius: 5px;
-    border-bottom: 10px;
-    margin-top: 5px;
-    font-family: sans-serif,Arial;
-    font-size: 16px;
-}
-input[type="submit"]{
-    width: 95%;
-    height: 35px;
-    background: #0b8256;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: sans-serif,Arial;
-    color: white;
-    outline: none;
-    border: 0px;
-    border-radius: 3px;
-    letter-spacing: -0.05em;
-    cursor: pointer;
-}
-input[type="submit"]:hover{
-    background: #0a4b33;
-}
-
-
-/* Tablet menu */
-@media all and (min-width:468px){
-    .menu{
-        justify-content: center;
-    }
-    .logo{
-        flex: 1;
-    }
-    .item.button{
-        width: auto;
-        order: 1;
-        display: block;
-    }
-    .toggle{
-        order: 2;
-    }
-    .button.secondary{
-        border: 0;
-    }
-    .button a{
-        text-decoration: none;
-        padding: 7px 15px;
-        background: teal;
-        border: 1px solid #006d6d;
-        border-radius: 50em;
-    }
-    .button.secondary a{
-        background: transparent;
-    }
-    .button a:hover{
-        transition: all .25s;
-    }
-    .button:not(.secondary) a:hover{
-        background: #006d6d;
-        border-color: #005959;
-    }
-    .button.secondary a:hover{
-        color: #ddd;
-    }
-}
-@media all and (min-width:768px){
-    .item{
-        display: block;
-        width: auto;
-    }
-    .toggle{
-        display: none;
-    }
-    .logo{
-        order: 0;
-    }
-    .item{
-        order: 1;
-    }
-    .button{
-        order: 2px;
-    }
-    .menu li{
-        padding: 15px 10px;
-    }
-    .menu li.button{
-        padding-right: 0;
-    }
-}
-
-
-</style>
 <body>
     <nav>
         <ul class="menu">
-            <li class="logo"><a href="#">Eng Up</a></li>
+            <li class="logo"><a href="edit.php">Eng Up</a></li>
             <li class="item button secondary"><a href="AddResearch.php">เพิ่มข้อมูล</a></li>
             <li class="item button secondary"><a href="edit.php">วิจัย</a></li>
+            <li class="item button secondary"><a href="Bugfaculty.php">รายได้คณะ</a></li>
             <p style="color: white;"><?php echo $_SESSION['emailAdmin']; ?></p>
-            <li class="item button secondary"><a href="#">Log out</a></li>
+            <li class="item button secondary"><a href="logout.php">Log out</a></li>
         </ul>
         
     </nav>
     <?php
     //leader_name and status_stake
-    $leader_sql = "SELECT * FROM research WHERE Re_ID = '$Re_id'";
-    // echo $leader_sql;
+    $leader_sql = "SELECT * FROM research INNER JOIN name_leader ON research.ID_Leader = name_leader.ID_Leader INNER JOIN approve_status ON research.Approve_status = approve_status.Approve_ID WHERE Re_ID = '$Re_id'";
+    
     $leader_query = mysqli_query($conn,$leader_sql);
     if(mysqli_num_rows($leader_query)==1){
         $row_research = mysqli_fetch_assoc($leader_query);
-        $leader_name = $row_research['Name_leader'];
+        $ID_Leader = $row_research['ID_Leader'];
+        $leader_name = $row_research['Name_Leader'];
         $type_stakeholder = $row_research['Status_stake'];
         $NameRe_TH = $row_research['NameRe_TH'];
         $NameRe_ENG = $row_research['NameRe_ENG'];
@@ -360,12 +64,20 @@ input[type="submit"]:hover{
         $fun_Status = $row_research['Funds_status'];
         $Bugget_Re = $row_research['Bugget'];
         $Time_Re = $row_research['Time_period'];
-        $type_approve = $row_research['Approve_status'];
+        $approve = $row_research['Approve'];
         $Time_approve = $row_research['Time_period_approve'];
         $Published_Status = $row_research['Published_status'];
+        $cost1 = $row_research['cost1'];
+        $cost2 = $row_research['cost2'];
+        $cost3 = $row_research['cost3'];
+        $cost4 = $row_research['cost4'];
+        $Port = $row_research['Port'];
+        $type_vat = $row_research['ID_vat'];
+        $type_vat_faculty = $row_research['ID_faculty'];
 
 
-        // echo $fun_Status;
+
+        // echo $ID_Leader;
     }
     //
     $member_sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Status = fundsstatus.Funds_Status)";
@@ -409,49 +121,118 @@ input[type="submit"]:hover{
     <div class="FormAddRe" style="background: white;">
     <div style="margin-left: 30px;">
     <form action="insertResearch.php" method="POST">
-        <p style="font-weight: bold;">ชื่อหัวหน้าโครงงาน <input type="text" class="Leader_Name" name="Leader_Re" value="<?php echo $leader_name;?>" placeholder="หัวหน้าโครงงาน"></p>
+        <p style="font-weight: bold;">ชื่อหัวหน้าโครงงาน : 
+        <select name="Leader_Re" class="Leader_Research" id="">
+                <option <?php if($ID_Leader == '1'){ echo 'selected'; }?> value="1">ผศ.ดร. วสันต์ คำสนาม</option>
+                <option <?php if($ID_Leader == '2'){ echo 'selected'; }?> value="2">ผศ.ดร. สุทธินันท์ ศรีรัตยาวงค์</option>
+                <option <?php if($ID_Leader == '3'){ echo 'selected'; }?> value="3">ผศ.ดร. นพรัตน์ เกตุขาว</option>
+                <option <?php if($ID_Leader == '4'){ echo 'selected'; }?> value="4">ผศ.ดร. ปุริมพัฒน์ สัทธรรมนุวงศ์</option>
+                <option <?php if($ID_Leader == '5'){ echo 'selected'; }?> value="5">ดร. ปรเมศร์ ปธิเก</option>
+                <option <?php if($ID_Leader == '6'){ echo 'selected'; }?> value="6">ดร. ฝนทิพย์ จินันทุยา</option>
+                <option <?php if($ID_Leader == '7'){ echo 'selected'; }?> value="7">ดร. รัชนีวรรณ อังกุรบุตร์</option>
+                <option <?php if($ID_Leader == '8'){ echo 'selected'; }?> value="8">ผศ.ดร. วิชญ์พล ฟักแก้ว</option>
+                <option <?php if($ID_Leader == '9'){ echo 'selected'; }?> value="9">ผศ.ดร.สุธรรม อรุณ</option>
+                <option <?php if($ID_Leader == '10'){ echo 'selected'; }?> value="10">ผศ. นัทธิ์ธนนท์ พงษ์พานิช</option>
+                <option <?php if($ID_Leader == '11'){ echo 'selected'; }?> value="11">อ. อดิศร ประสิทธิ์ศักดิ์</option>
+                <option <?php if($ID_Leader == '12'){ echo 'selected'; }?> value="12">รศ.ดร. เชวศักดิ์ รักเป็นไทย</option>
+                <option <?php if($ID_Leader == '13'){ echo 'selected'; }?> value="13">รศ.ดร. สิทธิเดช วชิราศรีศิริกุล</option>
+                <option <?php if($ID_Leader == '14'){ echo 'selected'; }?> value="14">รศ.ดร. จงลักษณ์ พาหะซา</option>
+                <option <?php if($ID_Leader == '15'){ echo 'selected'; }?> value="15">ผศ.ดร. ณัฐพงษ์ โปธิ</option>
+                <option <?php if($ID_Leader == '16'){ echo 'selected'; }?> value="16">ผศ. ดวงดี แสนรักษ์</option>
+                <option <?php if($ID_Leader == '17'){ echo 'selected'; }?> value="17">ดร. ดำรงค์ อมรเดชาพล</option>
+                <option <?php if($ID_Leader == '18'){ echo 'selected'; }?> value="18">ผศ. ดร.ธนาทิพย์ จันทร์คง</option>
+                <option <?php if($ID_Leader == '19'){ echo 'selected'; }?> value="19">อ. สุรพล ดำรงกกิตติกุล</option>
+                <option <?php if($ID_Leader == '20'){ echo 'selected'; }?> value="20">อ. กรวิน สุวรรรภักดิ์</option>
+                <option <?php if($ID_Leader == '21'){ echo 'selected'; }?> value="21">ดร. เกรียงศักดิ์ ไกรกิจราษฎร์</option>
+                <option <?php if($ID_Leader == '22'){ echo 'selected'; }?> value="22">อ. ธนกานต์ สวนกัน</option>
+                <option <?php if($ID_Leader == '23'){ echo 'selected'; }?> value="23">ดร. บรรเทิง ยานะ</option>
+                <option <?php if($ID_Leader == '24'){ echo 'selected'; }?> value="24">อ. วาสนา นากุ</option>
+                <option <?php if($ID_Leader == '25'){ echo 'selected'; }?> value="25">อ.ศราวุธ แต้โอสถ</option>
+                <option <?php if($ID_Leader == '26'){ echo 'selected'; }?> value="26">รศ.ดร.ณัฐพงศ์ ดำรงวิริยะนุภาพ</option>
+                <option <?php if($ID_Leader == '27'){ echo 'selected'; }?> value="27">รศ. กิตติพงษ์ วุฒิจำนงค์</option>
+                <option <?php if($ID_Leader == '28'){ echo 'selected'; }?> value="28">รศ.ดร. ธนกร ชมภูรัตน์</option>
+                <option <?php if($ID_Leader == '29'){ echo 'selected'; }?> value="29">ผศ.ดร. ปรีดา ไชยมหาวัน</option>
+                <option <?php if($ID_Leader == '30'){ echo 'selected'; }?> value="30">ผศ.ดร. สมบูรณ์ เซี่ยงฉิน</option>
+                <option <?php if($ID_Leader == '31'){ echo 'selected'; }?> value="31">ผศ.ดร. สุริยาวุธ ประอ้าย</option>
+                <option <?php if($ID_Leader == '32'){ echo 'selected'; }?> value="32">ผศ. ปิยพงษ์ สุวรรณมณีโชติ</option>
+                <option <?php if($ID_Leader == '33'){ echo 'selected'; }?> value="33">ดร. ธีรพจน์ ศุภวิริยะกิจ</option>
+                <option <?php if($ID_Leader == '34'){ echo 'selected'; }?> value="34">ดร. ขวัญสิรินภา ธนะวงศ์</option>
+                <option <?php if($ID_Leader == '35'){ echo 'selected'; }?> value="35">ดร. ปาลินี สุมิตสวรรค์</option>
+                <option <?php if($ID_Leader == '36'){ echo 'selected'; }?> value="36">ดร. อภิชาต บัวกล้า</option>
+                <option <?php if($ID_Leader == '37'){ echo 'selected'; }?> value="37">อ. ธเนศ ทองเดชศรี</option>
+                <option <?php if($ID_Leader == '38'){ echo 'selected'; }?> value="38">อ. ชัยวัฒน์ แสงศรีจันทร์</option>
+                <option <?php if($ID_Leader == '39'){ echo 'selected'; }?> value="39">อ. สุรเชษ ศรีนารา</option>
+                <option <?php if($ID_Leader == '40'){ echo 'selected'; }?> value="40">อ. วรจักร จันทร์แว่น</option>
+                <option <?php if($ID_Leader == '41'){ echo 'selected'; }?> value="41">อ. ณพล ศรีศักดา</option>
+                <option <?php if($ID_Leader == '42'){ echo 'selected'; }?> value="42">ดร. วรเทพ แซ่ล่อง</option>
+                <option <?php if($ID_Leader == '43'){ echo 'selected'; }?> value="43">ดร. ทรงวุฒิ ประกายวิเชียร</option>
+                <option <?php if($ID_Leader == '44'){ echo 'selected'; }?> value="44">ผศ. เอราวิล ถาวร</option>
+                <option <?php if($ID_Leader == '45'){ echo 'selected'; }?> value="45">ผศ. จักรทอง ทองจัตุ</option>
+                <option <?php if($ID_Leader == '46'){ echo 'selected'; }?> value="46">ผศ. ดร. พจนศักดิ์ พจนา</option>
+                <option <?php if($ID_Leader == '47'){ echo 'selected'; }?> value="47">ดร.อัจฉราวดี แก้ววรรณดี</option>
+                <option <?php if($ID_Leader == '48'){ echo 'selected'; }?> value="48">อ.คมกฤต เมฆสกุล</option>
+                <option <?php if($ID_Leader == '49'){ echo 'selected'; }?> value="49">อ. พงศ์วิทย์ พรมสุวรรณ</option>
+                <option <?php if($ID_Leader == '50'){ echo 'selected'; }?> value="50">ดร. อภิศักดิ์ วิทยาประภากร</option>
+                <option <?php if($ID_Leader == '51'){ echo 'selected'; }?> value="51">อ. อธิคม บุญซื่อ</option>
+                <option <?php if($ID_Leader == '52'){ echo 'selected'; }?> value="52">อ. เอกชัย แผ่นทอง</option>
+                <option <?php if($ID_Leader == '53'){ echo 'selected'; }?> value="53">อ. อโณทัย กล้าการขาย</option>
+                <option <?php if($ID_Leader == '54'){ echo 'selected'; }?> value="54">นางสาวพิมพ์ผกา แก้วษา</option>
+                <option <?php if($ID_Leader == '55'){ echo 'selected'; }?> value="55">นายกิตติ ไพเจริญ</option>
+                <option <?php if($ID_Leader == '56'){ echo 'selected'; }?> value="56">นางสาวรสนันท์ เอื้อพิทักษ์สกุล</option>
+                <option <?php if($ID_Leader == '57'){ echo 'selected'; }?> value="57">นางสาวศิริเพ็ญ บุญสม</option>
+                <option <?php if($ID_Leader == '58'){ echo 'selected'; }?> value="58">ว่าที่ ร.ต. หญิงสุพัตรา ใจมูลมั่ง</option>
+                <option <?php if($ID_Leader == '59'){ echo 'selected'; }?> value="59">นางกตัญชลี วันแก้ว</option>
+                <option <?php if($ID_Leader == '60'){ echo 'selected'; }?> value="60">นางสาวกันติชา ราชคม</option>
+                <option <?php if($ID_Leader == '61'){ echo 'selected'; }?> value="61">นายรณภัทร อักษรศิริ</option>
+                <option <?php if($ID_Leader == '62'){ echo 'selected'; }?> value="62">นายธนัตถ์กานต์ ใจสวัสดิ์</option>
+                <option <?php if($ID_Leader == '63'){ echo 'selected'; }?> value="63">นายเฉลิมรัฐ เกาะแก้ว</option>
+                <option <?php if($ID_Leader == '64'){ echo 'selected'; }?> value="64">นางสาวสุทธิดา ใจมูลมั่ง</option>
+                <option <?php if($ID_Leader == '65'){ echo 'selected'; }?> value="65">นางสาวกายรวี ฟูแสง</option>
+            </select> </p>
 
         <div>
         <p style="font-weight: bold;"><input type="checkbox" class="checkbox" name="TypeMember_Re"  id="AddMember_Re" value="1" <?php if($type_stakeholder==1){echo 'checked';} ?>> มีผู้ร่วมวิจัย
             <input type="checkbox" class="checkbox" name="TypeMember_Re" id="AddMember_Re2"  value="2" <?php if($type_stakeholder==2){echo 'checked';}?> > ไม่มีผู้ร่วมวิจัย</p>
-
-            
-                <p id="ShowAddMember_Re" style="display:none" >
-                <?php if(mysqli_num_rows($member_query)==0){
-                    echo "<input type='text' class='Member_Re' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 1'>";
-                    echo "<input type='text' class='Member_Re' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 2'>";
-                    echo "<input type='text' class='Member_Re' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 3'>";
+            <div id="ShowAddMember_Re" style="display:none">
+                        <?php
+                         if($type_stakeholder=='1'){
+                            $sql_count = "SELECT COUNT(*)  AS AllMember FROM re_member WHERE Re_ID = '$Re_id'";
+                            $count_query = mysqli_query($conn,$sql_count);
+                            $rowCount = mysqli_fetch_assoc($count_query);
+                            
+                            
+                            echo "<p style='display:none' id='NumMember'><input type='text' id='MebmerAll' value=".$rowCount['AllMember']."><p>";
+                            
+                            echo "<p> จำนวนผู้ร่วมวิจัย : <input type='text' id='Mebmer_Num' placeholder='จำนวนผู้วิจัย' value=".$rowCount['AllMember']." class='Member_NumRe'> /คน";
+                            echo"<button type='button' class='But-AddMem' id='AddMem' onclick='add();'>ยืนยัน</button> </p> ";
+                            echo "<div id='new_chq'>";
+                            if(mysqli_num_rows($member_query)>0){
+                            while ($member_row = mysqli_fetch_assoc($member_query)){
+                                $Num = 1;
+                                $member_name = $member_row['MemberName'];
+                                $member_no = $member_row['NO'];
+                                echo "<input type='text'  name='no[]' value='$member_no' style='display: none;'>";
+                                echo" <input type='text' class='MemberResearch' value='$member_name' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ ".$Num."'>";
+                                }
+                                $Num++;
+                            }
+                            
+                            echo "</div>";
+                            echo "<div id='new_Mem'>";
+                            echo "</div>";
+                            echo " <input type='hidden' value='1' id='total_chq'>";
+                      
+                        }
                         
-                }
-                elseif(mysqli_num_rows($member_query)==1){
-                    while ($member_row = mysqli_fetch_assoc($member_query)){
-                        $member_name = $member_row['MemberName'];
-                        $member_no = $member_row['NO'];
-                        echo "<input type='text' class='Member_Re' name='Member[]' value='$member_name'>";
-                        echo "<input type='text'  name='no[]' value='$member_no' style='display: none;'>";
+                        else if($type_stakeholder=='2'){
+                            
+                            echo "<p> จำนวนผู้ร่วมวิจัย : <input type='text' id='Mebmer_Num' placeholder='จำนวนผู้วิจัย' class='Member_NumRe'> /คน";
+                            echo"<button type='button' class='But-AddMem' id='AddMem' onclick='addnoneMem();'>ยืนยัน</button> </p> ";
+                            echo "<div id='new_chq'>";
+                            echo "</div>";
+                            echo "<input type='hidden' value='1' id='total_chq'>";
+                            
                         }
-                    echo "<input type='text' class='Member_Re' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 2'>";
-                    echo "<input type='text' class='Member_Re' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 3'>";
-                }
-                elseif(mysqli_num_rows($member_query)==2){
-                    while ($member_row = mysqli_fetch_assoc($member_query)){
-                        $member_name = $member_row['MemberName'];
-                        $member_no = $member_row['NO'];
-                        echo "<input type='text' class='Member_Re' name='Member[]' value='$member_name'>";
-                        echo "<input type='text' name='no[]' value='$member_no' style='display: none;'>";
-                        }
-
-                    echo "<input type='text' class='Member_Re' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ 3'>";
-                }
-                elseif(mysqli_num_rows($member_query)>2){
-                    while ($member_row = mysqli_fetch_assoc($member_query)){
-                        $member_name = $member_row['MemberName'];
-                        $member_no = $member_row['NO'];
-                        echo "<input type='text' class='Member_Re' name='Member[]' value='$member_name'>";
-                        echo "<input type='text' name='no[]' value='$member_no' style='display: none;'>";
-                        }
-                }
-                
                  ?>
                 </p>
 
@@ -510,7 +291,8 @@ input[type="submit"]:hover{
                     <option value="Other"<?php if($fun_Status == '2'){if($Funout_Agency != 'อวน.' && $Funout_Agency != 'อว.' && $Funout_Agency != 'วช.' && $Funout_Agency != 'สกสว.' && $Funout_Agency != 'สวทช.' && $Funout_Agency != 'รายได้คณะ' && 
                     $Funout_Agency != 'รายได้' && $Funout_Agency != 'แผ่นดิน' && $Funout_Agency != 'Other' ){echo "selected";}} ?> >อื่น ๆ </option>
                     </select>
-                    <p id= "Re_CapOut" style="display: none;"> <input type="text" name="Agency_out_other" id="" value="<?php if($fun_Status == '2'){if($type_Funout == '1'){echo $Funout_Agency;}}?>" placeholder="โปรดระบุ" ></p>
+                    <p id= "Re_CapOut" style="display: none;"> <input type="text" name="Agency_out_other" id="" value="<?php if($fun_Status == '2'){if($type_Funout == '1'){echo $Funout_Agency;}}?>" placeholder="โปรดระบุ" style="border: 1px solid"></p>
+                    
                     </div>
                 </div>
                 <div>
@@ -520,36 +302,151 @@ input[type="submit"]:hover{
 
             </div>
             </p>
-                
+            <p style="font-weight: bold; margin-left:20px; margin-top:20px;" >งบประมาณ</p>
+                <table border="2px" style="margin-left: 20px; " class="Bugget_Re">
+                    <thead>
+                        <tr>
+                        <td>ค่า/งวด</td>
+                        <td>งวดที่ 1</td>
+                        <td>งวดที่ 2</td>
+                        <td>งวดที่ 3</td>
+                        <td>งวดที่ 4</td>
+                        <td>ค่าประเมิลผลงาน</td>
+                        <td>รวม</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <?php 
+                            echo" <td style='text-align: center; font-weight:bold;' >จำนวน</td>";
+                            echo" <td><input type='number' name='cost_1' class='cost' id='cost-one' value='$cost1' required pattern='0-9' title='กรอกได้เฉพาะตัวเลขเท่านั้น'></td>";
+                            echo "<td><input type='number' name='cost_2' class='cost' id='cost-two' value='$cost2' required pattern='0-9' title='กรอกได้เฉพาะตัวเลขเท่านั้น'></td>";
+                            echo "<td><input type='number' name='cost_3' class='cost' id='cost-tree' value='$cost3' required pattern='0-9' title='กรอกได้เฉพาะตัวเลขเท่านั้น'></td>";
+                            echo "<td><input type='number' name='cost_4' class='cost' id='cost-four' value='$cost4' required pattern='0-9' title='กรอกได้เฉพาะตัวเลขเท่านั้น'></td>";
+                            echo "<td><input type='number' name='cost_5' class='cost' id='cost-five' value='$Port' required pattern='0-9' title='กรอกได้เฉพาะตัวเลขเท่านั้น'></td>";
+                            echo "<td class='non_input'><input id='sum-cost' name='Bugget' value='$Bugget_Re' type='number' placeholder='รวม' readonly></td>";
+                            ?>
+                        </tr>
+                        <tr class="tr-non_input">
+                            <?php
+                            if($type_vat == '1'){
+                                $sql_vat = "SELECT * FROM research INNER JOIN vat ON research.Re_ID = vat.Re_ID WHERE research.Re_ID ='$Re_id'";
+                                $sql_vat_query = mysqli_query($conn,$sql_vat);
+                                $rowvat = mysqli_fetch_assoc($sql_vat_query);
+                                echo"<td ><input type='checkbox' class='Checkbox-Bugget' value='1' name='type_vat_Re' id='' checked>ค่าบำรุงมหาวิทยาลัย 10%</td>";
+                                echo" <td class='non_input'><input id='cost-one-vat' name='Vat1' value='".$rowvat['Vat1']."' class='vat' type='number'  readonly></td>";
+                                echo' <td class="non_input"><input id="cost-two-vat" name="Vat2" value="'.$rowvat["Vat2"].'" class="vat" type="number" readonly></td>';
+                                echo' <td class="non_input"><input id="cost-tree-vat" name="Vat3" value="'.$rowvat["Vat3"].'" class="vat" type="number" readonly></td>';
+                                echo' <td class="non_input"><input id="cost-four-vat" name="Vat4" value="'.$rowvat["Vat4"].'" class="vat" type="number" readonly></td>';
+                                echo' <td class="non_input"><input id="cost-five-vat" name="Vat5" value="'.$rowvat["PortVat"].'" class="vat" type="number" readonly></td>';
+                                echo' <td class="non_input"><input id="sum-cost-vat" name="Vat_total" value="'.$rowvat["Vat_total"].'" type="number" readonly></td>';
+                            }
+                            elseif($type_vat == '2'){
+                                echo"<td ><input type='checkbox' class='Checkbox-Bugget' value='2' name='type_vat_Re' id='' >ค่าบำรุงมหาวิทยาลัย 10%</td>";
+                                echo" <td class='non_input'><input id='cost-one-vat' name='Vat1'  class='vat' type='number'  readonly></td>";
+                                echo' <td class="non_input"><input id="cost-two-vat" name="Vat2"  class="vat" type="number" readonly></td>';
+                                echo' <td class="non_input"><input id="cost-tree-vat" name="Vat3"  class="vat" type="number" readonly></td>';
+                                echo' <td class="non_input"><input id="cost-four-vat" name="Vat4"  class="vat" type="number" readonly></td>';
+                                echo' <td class="non_input"><input id="cost-five-vat" name="Vat5"  class="vat" type="number" readonly></td>';
+                                echo' <td class="non_input"><input id="sum-cost-vat" name="Vat_total"  type="number" readonly></td>';
+                            }
+                            
+                            
+                            ?>
+                        </tr>
+                        <tr class="tr-non_input">
+                            <?php
+                            if($type_vat_faculty == '1'){
+                                $sql_vat_faculty = "SELECT * FROM research INNER JOIN vat_faculty ON research.Re_ID = vat_faculty.Re_ID WHERE research.Re_ID ='$Re_id'";
+
+                                $sql_vat_facultyquery = mysqli_query($conn,$sql_vat_faculty);
+                                $rowvatfaculty = mysqli_fetch_assoc($sql_vat_facultyquery);
+                                echo'<td ><input type="checkbox" class="Checkbox-Bugget-faculty" value="1" name="type_vat_faculty" id="" checked>ค่าบำรุงคณะ 5%</td>';
+                                echo'<td class="non_input"><input id="cost-one-vat-faculty" name="vat_facul1" class="vat-faculty" value="'.$rowvatfaculty['faculty1'].'" type="number"  readonly></td>';
+                                echo'<td class="non_input"><input id="cost-two-vat-faculty" name="vat_facul2" class="vat-faculty" value="'.$rowvatfaculty['faculty2'].'" type="number" readonly></td>';
+                                echo'<td class="non_input"><input id="cost-tree-vat-faculty" name="vat_facul3" class="vat-faculty" value="'.$rowvatfaculty['faculty3'].'" type="number" readonly></td>';
+                                echo'<td class="non_input"><input id="cost-four-vat-faculty" name="vat_facul4" class="vat-faculty" value="'.$rowvatfaculty['faculty4'].'" type="number" readonly></td>';
+                                echo'<td class="non_input"><input id="cost-five-vat-faculty" name="vat_facul5" class="vat-faculty" value="'.$rowvatfaculty['faculty_Port'].'" type="number" readonly></td>';
+                                echo'<td class="non_input"><input id="sum-cost-vat-faculty" name="vat_facul_total" type="number" value="'.$rowvatfaculty['faculty_total'].'" readonly></td>';
+                            }
+                            elseif($type_vat_faculty == '2'){
+                                echo'<td ><input type="checkbox" class="Checkbox-Bugget-faculty" value="2" name="type_vat_faculty" id="" >ค่าบำรุงคณะ 5%</td>';
+                                echo'<td class="non_input"><input id="cost-one-vat-faculty" name="vat_facul1" class="vat-faculty"  type="number"  readonly></td>';
+                                echo'<td class="non_input"><input id="cost-two-vat-faculty" name="vat_facul2" class="vat-faculty"  type="number" readonly></td>';
+                                echo'<td class="non_input"><input id="cost-tree-vat-faculty" name="vat_facul3" class="vat-faculty" type="number" readonly></td>';
+                                echo'<td class="non_input"><input id="cost-four-vat-faculty" name="vat_facul4" class="vat-faculty" value="" type="number" readonly></td>';
+                                echo'<td class="non_input"><input id="cost-five-vat-faculty" name="vat_facul5" class="vat-faculty" value="" type="number" readonly></td>';
+                                echo'<td class="non_input"><input id="sum-cost-vat-faculty" name="vat_facul_total" type="number"  readonly></td>';
+                            }
+                            
+                            ?>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="font-weight: bold; margin-top:10px;">ระยะเวลาในการดำเนิน :
+            <input type="text" name="datefilter" class="Date-time-approve" value="<?php echo $Time_Re;?>" ></div>
+
+        </div>
         </fieldset>
         </div>
         <!-- Stop แหล่งเงินทุน -->
         <br>
-        <div style="font-weight: bold;"> งบประมาณ : <input type="text" class="Other" name="Bugget" value="<?php echo $Bugget_Re;?>"> /บาท </div><br>
-
-        <div style="font-weight: bold;">ระยะเวลาในการดำเนิน :
-            <input type="text" name="datefilter" class="Date-time-approve" value="<?php echo $Time_Re;?>" >
-
-        </div><br>
+        
 
         <div style="font-weight: bold;">
-            ขอนุมัติดำเนินโครงการ : <select name="approve_Type" id="">
-            <option value="1" <?php if($type_approve == '1'){echo 'selected';}?>>เสนอโครงการ</option>
-            <option value="2" <?php if($type_approve == '2'){echo 'selected';}?>>เซ็นสัญญา</option>
-            <option value="3" <?php if($type_approve == '3'){echo 'selected';}?>>ขออนุมัติดำเนินโครงการ</option>
-            <option value="4" <?php if($type_approve == '4'){echo 'selected';}?>>ขออนุมัติเบิกเงิน(รอบ1)</option>
-            <option value="5" <?php if($type_approve == '5'){echo 'selected';}?>>ขออนุมัติเบิกเงิน(รอบ2)</option>
-            <option value="6" <?php if($type_approve == '6'){echo 'selected';}?>>ขออนุมัติเบิกเงิน(รอบ3)</option>
-            <option value="7" <?php if($type_approve == '7'){echo 'selected';}?>>ขออนุมัติขยายเวลา</option>
-            <option value="8" <?php if($type_approve == '8'){echo 'selected';}?>>สิ้นสุดโครงการ</option>
-            </select>
-        <br><br>
-            <div style="font-weight: bold;">ระยะเวลาขอนุมัติ :
-                <input type="text" class="Date-time-approve" name="Time_period" value="<?php echo $Time_approve?>" >
-            </div>
-        </div>
+        <table border="2px" >
+            <thead>
+                <tr>
+                <th>ครั้งที่</td>
+                <th>สถานะโครงการ</td>
+                <th>ระยะเวลาขอนุมัติ</td>
+                </tr>
+            </thead>
+            <tbody>
+                
+                
+                    <?php
+                    $Log_Approve = "SELECT * FROM research INNER JOIN log_approve ON research.Re_ID = log_approve.Re_ID INNER JOIN ";
+                    $Log_Approve .= "approve_status ON log_approve.Approve_status = approve_status.Approve_ID WHERE research.Re_ID = '$Re_id'";
+                    $Log_Approve_Query = mysqli_query($conn,$Log_Approve);
+                    if(mysqli_num_rows($Log_Approve_Query)>0){
+                        $numrow = 1;
+                        while($rowLog_Approve = mysqli_fetch_assoc($Log_Approve_Query)){
+                            echo "<tr>";
+                            echo "<td style='text-align:center'>".$numrow."</td>";
+                            echo "<td>".$rowLog_Approve['Approve']."</td>";
+                            echo "<td>".$rowLog_Approve['Time_period_log']."</td>";
+                            echo "</tr>";
+                            $numrow++;
 
-        <div>
+                        }
+                        
+                    }
+                    ?>
+                
+                <tr>
+                    <td>ครั้งถัดไป</td>
+                    <td><select name="approve_Type" id="">
+                    <option value="" selected disabled hidden>โปรดเลือกสถานะโครงการ</option>
+                    <option value="1">เสนอโครงการ</option>
+                    <option value="2">เซ็นสัญญา</option>
+                    <option value="3">ขออนุมัติดำเนินโครงการ</option>
+                    <option value="4">ขออนุมัติเบิกเงิน(รอบ1)</option>
+                    <option value="5">ขออนุมัติเบิกเงิน(รอบ2)</option>
+                    <option value="6">ขออนุมัติเบิกเงิน(รอบ3)</option>
+                    <option value="7">ขออนุมัติขยายเวลา</option>
+                    <option value="8">สิ้นสุดโครงการ</option>
+                </select></td>
+                    <td><input type="text" name="Time_period" value="" class="Date-time-approve" placeholder="โปรดกรอกระยะเวลา ..." ></td>
+                </tr>
+            </tbody>
+        </table>
+            
+        
+
+        <div style="margin-top: 15px;">
             <input type="checkbox" class="checkbox3" name="Published" id="Working" value="1" <?php if($Published_Status == '1'){echo 'checked';}?>>มีผลงานตีพิมพ์
             <input type="checkbox" class="checkbox3" name="Published" id="Working2"  value="2"  <?php if($Published_Status == '2'){echo 'checked';}?>>ไม่มีผลงานตีพิมพ์
 
@@ -564,7 +461,7 @@ input[type="submit"]:hover{
                 </p>
                 <div style="font-weight: bold;">
                     Volome : <input type="text" class="Other" placeholder="No." name="Volome" value="<?php if($Published_Status == '1'){echo $Volume;}?>">
-                    No. ISSUE : <input type="text" class="Other" placeholder="No. ISSUE" name="ISSUE" value="<?php if($Published_Status == '1'){echo $Issue;}?>"> 
+                    No. ISSUE : <input type="text" class="Other" placeholder="No. ISSUE" name="ISSUE" value="<?php if($Published_Status == '1'){echo $Issue;}?>"> <br>
                     หน้าที่พิมพ์ :  <input type="text" class="Other" name="Page_Published" placeholder="หน้าที่พิมพ์" value="<?php if($Published_Status == '1'){echo $Page;}?>">
                 </div>
                 </p>
@@ -574,20 +471,29 @@ input[type="submit"]:hover{
 
         <input type="text" name="Re_id_Edit" value="<?php echo $Re_id;?>" style="display: none;">
         <div style="text-align: center; height: 70px; margin-top:20px;">
-        <button type="submit" class="Btu-Sub" value="Update" name="but_Submit">Save</button>
+        <button type="submit" class="Btu-Sub" value="back" name="but_Submit">back</button>
+        <button type="submit" class="Btu-Sub" value="Update" name="but_Submit" onClick="return confirm('คุณต้องการที่อัพเดทข้อมูลนี้หรือไม่ ?');">Save</button>
         </div>
     </form>
     </div>
     </div>
-    
-
-
 
     
 
     
 </body>
 <script>
+
+    // location.reload();
+    // console.log("page");
+    // return false;
+    $(document).ready(function(){     
+        // location.reload();
+        // console.log("page");
+        // return false;
+    });
+
+        // location.reload();
         // checkbox code ผุ้ร่วมวิจัย 
         $('.checkbox').click(function(){
             $('.checkbox').each(function(){
@@ -843,6 +749,26 @@ input[type="submit"]:hover{
             });
             
         });
+        function add(){
+        $("#new_Mem").empty();
+        var Nummem = document.getElementById("MebmerAll").value ;
+        var i = document.getElementById("Mebmer_Num").value ;
+    
+        var remain = Math.abs(Nummem-i) ;
+        
+        for (Num = 1; Num <= remain; Num++) {
+            Nummem++
+            var new_input="<input type='text' class='MemberResearch'  name='Member[]' placeholder='ผู้ร่วมวิจัยคน"+Nummem+"' required >";
+            // var new_input="<input type='text' class='' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ><button type='button' class='but-Delete' onclick='remove();' id='MemberRe_"+Num+"'>x</button>";
+            $('#new_Mem').append(new_input);
+            $('#total_chq').val(i);
+        }
+
+
+    }
+
+   
+
         
 </script>
 

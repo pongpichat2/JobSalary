@@ -21,7 +21,7 @@ if (mysqli_num_rows($login_query) == 1){
 else{
 echo "<script>";
 echo "alert('รหัสผ่านผิด !!!');";
-echo "window.location='show.php';";
+echo "window.location='Login.php';";
 echo "</script>";
 }
 ?>
