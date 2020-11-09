@@ -312,6 +312,7 @@ if(!isset($_SESSION['emailAdmin'])) {
                         </tr>
                     </thead>
                     <tbody>
+                        
                         <tr>
                             <?php 
                             echo" <td style='text-align: center; font-weight:bold;' >จำนวน</td>";
@@ -401,14 +402,18 @@ if(!isset($_SESSION['emailAdmin'])) {
                 </tr>
             </thead>
             <tbody>
-                
+            <tr>
+                        <td style="text-align: center;">1</td>
+                        <td><?php echo $approve ?></td>
+                        <td><?php echo $Time_approve?></td>
+                        </tr>
                 
                     <?php
                     $Log_Approve = "SELECT * FROM research INNER JOIN log_approve ON research.Re_ID = log_approve.Re_ID INNER JOIN ";
                     $Log_Approve .= "approve_status ON log_approve.Approve_status = approve_status.Approve_ID WHERE research.Re_ID = '$Re_id'";
                     $Log_Approve_Query = mysqli_query($conn,$Log_Approve);
                     if(mysqli_num_rows($Log_Approve_Query)>0){
-                        $numrow = 1;
+                        $numrow = 2;
                         while($rowLog_Approve = mysqli_fetch_assoc($Log_Approve_Query)){
                             echo "<tr>";
                             echo "<td style='text-align:center'>".$numrow."</td>";
