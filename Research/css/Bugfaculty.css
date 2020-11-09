@@ -248,3 +248,15 @@ a:hover{
         max-width: 95%;
     }
 }
+.But-excel{
+    margin-top: 40px;
+    border: 2px solid black;
+    font-family: 'Sarabun', sans-serif;
+    font-weight: bold;
+    transition: 0.8s;
+}
+.But-excel:hover{
+    border-radius: 5px;
+    background-color: rgba(13, 138, 13, 0.699);
+    box-shadow: 1px 1px 0 black ;
+}

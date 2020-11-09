@@ -30,9 +30,7 @@ if(!isset($_SESSION['emailAdmin'])) {
     <script src="js/editdata1.js"></script>
     <link rel="stylesheet" href="css/editdata.css">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  
     <title>Document</title>
 </head>
 
@@ -113,8 +111,6 @@ if(!isset($_SESSION['emailAdmin'])) {
         $Volume = $row_Published['Volume'];
         $Issue = $row_Published['Issue'];
         $Page = $row_Published['Page'];
-
-
     }
 
     ?>

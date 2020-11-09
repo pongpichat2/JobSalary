@@ -40,9 +40,14 @@ $sql = "SELECT * FROM research INNER JOIN name_leader ON research.ID_Leader = na
     </nav>
 
 
-    <h4 style="margin-left:55%;margin-bottom:10px;margin-top:2%;font-family: 'Sarabun', sans-serif;" >ค้นหา <input type="text" name="search" id="search" placeholder="ชื่อโครงการวิจัย...." style="border: 1px solid"> หรือ 
-    <input type="text" name="search_re" id="search_re" placeholder="ชื่อหัวหน้าโครงการ...." style="border: 1px solid"></h4>
-    <div class="container" style="margin-top: 40px;">
+    <h4 style="margin-left:55%;margin-bottom:-20px;margin-top:2%;font-family: 'Sarabun', sans-serif;" >ค้นหา <input type="text" name="search" id="search" placeholder="ชื่อโครงการวิจัย...." style="border: 1px solid"> หรือ 
+    <input type="text" name="search_re" id="search_re" placeholder="ชื่อหัวหน้าโครงการ...." style="border: 1px solid">
+    </h4>
+    <button onclick="exel_export()" class="But-excel" style="width:110px;height:35px;margin-left:45px;">Get Exel <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+width="24" height="24"
+viewBox="0 0 172 172"
+style=" fill:#000000;"><g transform="translate(4.73,4.73) scale(0.945,0.945)"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="none" stroke-linecap="butt" stroke-linejoin="none" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g stroke="#000000" stroke-width="10" stroke-linejoin="round"><path d="M150.5,39.41667v93.16667c0,1.98158 -1.60175,3.58333 -3.58333,3.58333h-57.33333v-100.33333h57.33333c1.98158,0 3.58333,1.60175 3.58333,3.58333z" fill="#4caf50"></path><path d="M114.66667,53.75h25.08333v10.75h-25.08333zM114.66667,89.58333h25.08333v10.75h-25.08333zM114.66667,107.5h25.08333v10.75h-25.08333zM114.66667,71.66667h25.08333v10.75h-25.08333zM89.58333,53.75h17.91667v10.75h-17.91667zM89.58333,89.58333h17.91667v10.75h-17.91667zM89.58333,107.5h17.91667v10.75h-17.91667zM89.58333,71.66667h17.91667v10.75h-17.91667z" fill="#ffffff"></path><path d="M96.75,150.5l-75.25,-14.33333v-100.33333l75.25,-14.33333z" fill="#2e7d32"></path><path d="M68.54558,111.08333l-8.63942,-16.34358c-0.32967,-0.61275 -0.6665,-1.73075 -1.01767,-3.36117h-0.13258c-0.16483,0.77042 -0.55183,1.93858 -1.161,3.50808l-8.67525,16.19667h-13.46258l15.98883,-25.08692l-14.63075,-25.07975h13.74925l7.17025,15.03567c0.559,1.18608 1.06067,2.59792 1.505,4.22475h0.14333c0.2795,-0.97108 0.80267,-2.43667 1.57308,-4.37167l7.9765,-14.88875h12.59542l-15.04642,24.86475l15.46567,25.29475h-13.40167z" fill="#ffffff"></path></g><path d="M0,172v-172h172v172z" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><g stroke="none" stroke-width="1" stroke-linejoin="miter"><path d="M146.91667,35.83333h-57.33333v100.33333h57.33333c1.98158,0 3.58333,-1.60175 3.58333,-3.58333v-93.16667c0,-1.98158 -1.60175,-3.58333 -3.58333,-3.58333z" fill="#4caf50"></path><path d="M114.66667,53.75h25.08333v10.75h-25.08333zM114.66667,89.58333h25.08333v10.75h-25.08333zM114.66667,107.5h25.08333v10.75h-25.08333zM114.66667,71.66667h25.08333v10.75h-25.08333zM89.58333,53.75h17.91667v10.75h-17.91667zM89.58333,89.58333h17.91667v10.75h-17.91667zM89.58333,107.5h17.91667v10.75h-17.91667zM89.58333,71.66667h17.91667v10.75h-17.91667z" fill="#ffffff"></path><path d="M96.75,150.5l-75.25,-14.33333v-100.33333l75.25,-14.33333z" fill="#2e7d32"></path><path d="M68.54558,111.08333l-8.63942,-16.34358c-0.32967,-0.61275 -0.6665,-1.73075 -1.01767,-3.36117h-0.13258c-0.16483,0.77042 -0.55183,1.93858 -1.161,3.50808l-8.67525,16.19667h-13.46258l15.98883,-25.08692l-14.63075,-25.07975h13.74925l7.17025,15.03567c0.559,1.18608 1.06067,2.59792 1.505,4.22475h0.14333c0.2795,-0.97108 0.80267,-2.43667 1.57308,-4.37167l7.9765,-14.88875h12.59542l-15.04642,24.86475l15.46567,25.29475h-13.40167z" fill="#ffffff"></path></g><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path></g></g></svg></button>
+    <div class="container" style="margin-top: 10px;">
     <div style="margin-top: 10px;">
     <table id="table" class="table" >
         <thead class="thead-dark">
@@ -247,6 +252,15 @@ $sql = "SELECT * FROM research INNER JOIN name_leader ON research.ID_Leader = na
             
         } );
     });
+    function exel_export(){
+        // console.log($("#searchSelect").val());
+        // console.log($("#search_re").val());
+        // console.log($("#search").val());
+        // top.location.href="test.php?select_type="+$("#searchSelect").val();
+        // top.location.href="test.php?select_type="+$("#searchSelect").val()+"&search="$("#search").val()+"&search_re="+$("#search_re").val();
+        top.location.href="reportExel.php?search="+$("#search").val()+"&search_re="+$("#search_re").val()+"&select_type="+$("#searchSelect").val();
+        // top.location.href="test.php?search_re="+$("#search_re").val();
+    }
 
 </script>
 </html>

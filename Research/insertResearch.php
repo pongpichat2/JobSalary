@@ -157,12 +157,12 @@ if($But_Sub == 'Insert'){
 
     $sqlResearch = "INSERT INTO research (Re_ID, ID_Leader, NameRe_TH, NameRe_ENG, Type_research, cost1, cost2, cost3, cost4, Port, Bugget, ID_vat, ID_faculty, Time_period, Status_stake, Approve_status, Time_period_approve, Published_status, Funds_status) "; 
     $sqlResearch .= "Value ('$Re_ID','$LeaderName','$NameRe_TH','$NameRe_Eng','$TypeRe','$cost1','$cost2','$cost3','$cost4','$cost5','$Bugget','$type_vat','$type_vat_faculty','$dateperiod','$StatusMemRe', '$Approve_Type' ,'$Time_period', '$Published_Status', '$Status_Funds')";
-
+    // echo $sqlResearch;
     $result = mysqli_query($conn,$sqlResearch);
 
-    $Log_approve = "INSERT INTO log_approve (Re_ID, Approve_status, Time_period_log) Value ('$Re_ID','$Approve_Type','$Time_period')";
+    // $Log_approve = "INSERT INTO log_approve (Re_ID, Approve_status, Time_period_log) Value ('$Re_ID','$Approve_Type','$Time_period')";
 
-        mysqli_query($conn,$Log_approve);
+    //     mysqli_query($conn,$Log_approve);
 
     // มีผู้ร่วมวิจัย
     if($StatusMemRe == "1"){
@@ -257,9 +257,16 @@ elseif($But_Sub == 'Update'){
     
         // กองทุนภายใน
         if($Status_Funds == "1"){
-            $sql_funds_in = "UPDATE funds_in SET  Name_Agency = '$Agencyin' WHERE Re_ID = '$Re_id_Edit'";
-            $result4 = mysqli_query($conn,$sql_funds_in);
-
+            $sqlCheck_funin = "SELECT * FROM funds_in WHERE Re_ID = '$Re_id_Edit'";
+            $sqlCheck_funin_query = mysqli_query($conn,$sqlCheck_funin);
+            if(mysqli_num_rows($sqlCheck_funin_query)>0){
+                $sql_funds_in = "UPDATE funds_in SET  Name_Agency = '$Agencyin' WHERE Re_ID = '$Re_id_Edit'";
+                $result4 = mysqli_query($conn,$sql_funds_in);
+            }
+            else{
+                $sql_funds_in = "INSERT INTO funds_in (Re_ID, Name_Agency) Value ('$Re_id_Edit', '$Agencyin')";
+                $result4 = mysqli_query($conn,$sql_funds_in);
+            }
             $sql_funds_out_Delete = "DELETE funds_out WHERE Re_ID = '$Re_id_Edit'";
             $result4Delete_out = mysqli_query($conn,$sql_funds_out_Delete);
         }
@@ -272,13 +279,37 @@ elseif($But_Sub == 'Update'){
                     // echo $Agencyout_other;
                     $Agencyout = $Agencyout_other;
                 }
-                $sql_funds_out = "UPDATE funds_out SET Type_Funds_out = '$type_funds_out', Agency_name = '$Agencyout' WHERE Re_ID = '$Re_id_Edit' ";
-                $result5 = mysqli_query($conn,$sql_funds_out);
-                // echo $sql_funds_out;
+                $check_funds_out = "SELECT * FROM funds_out WHERE Re_ID = '$Re_id_Edit'";
+                $check_funds_out_query = mysqli_query($conn,$check_funds_out);
+                // echo $check_funds_out;
+                if(mysqli_num_rows($check_funds_out_query)==1){
+                    $sql_funds_out = "UPDATE funds_out SET Type_Funds_out = '$type_funds_out', Agency_name = '$Agencyout' WHERE Re_ID = '$Re_id_Edit' ";
+                    $result5 = mysqli_query($conn,$sql_funds_out);
+                    // echo $sql_funds_out;
+                }
+                else{
+                    // $sql_funds_out = "INSERT INTO funds_out ST Type_Funds_out = '$type_funds_out', Agency_name = '$Agencyout' WHERE Re_ID = '$Re_id_Edit' ";
+                    $sql_funds_out = "INSERT INTO funds_out (Type_Funds_out,Agency_name,Re_ID) VALUE ('$type_funds_out','$Agencyout','$Re_id_Edit')";
+                    $result5 = mysqli_query($conn,$sql_funds_out);
+                }
+               
             }
             elseif($type_funds_out == "2"){
-                $sql_funds_out = "UPDATE funds_out SET Type_Funds_out = '$type_funds_out', Agency_name = '$Agencyout_service' WHERE Re_ID = '$Re_id_Edit'";
-                $result5 = mysqli_query($conn,$sql_funds_out);
+                $check_funds_out = "SELECT * FROM funds_out WHERE Re_ID = '$Re_id_Edit'";
+                $check_funds_out_query = mysqli_query($conn,$check_funds_out);
+                if(mysqli_num_rows($check_funds_out_query)==1){
+                    $sql_funds_out = "UPDATE funds_out SET Type_Funds_out = '$type_funds_out', Agency_name = '$Agencyout_service' WHERE Re_ID = '$Re_id_Edit'";
+                    $result5 = mysqli_query($conn,$sql_funds_out);
+                    // echo $sql_funds_out;
+                }
+                else{
+                    // $sql_funds_out = "INSERT INTO funds_out ST Type_Funds_out = '$type_funds_out', Agency_name = '$Agencyout' WHERE Re_ID = '$Re_id_Edit' ";
+                    $sql_funds_out = "INSERT INTO funds_out (Type_Funds_out,Agency_name,Re_ID) VALUE ('$type_funds_out','$Agencyout','$Re_id_Edit')";
+                    $result5 = mysqli_query($conn,$sql_funds_out);
+                }
+                // $sql_funds_out = "UPDATE funds_out SET Type_Funds_out = '$type_funds_out', Agency_name = '$Agencyout_service' WHERE Re_ID = '$Re_id_Edit'";
+                // $result5 = mysqli_query($conn,$sql_funds_out);
+                // echo $sql_funds_out;
             }
             
     
@@ -398,10 +429,10 @@ elseif($But_Sub == 'Update'){
             mysqli_query($conn,$Set_status_research_vat_fac);
         }
         
-    // echo "<script>";
-    // echo "alert('อัพเดทข้อมูลสำเร็จ !');";
-    // echo "window.location='edit.php';";
-    // echo "</script>";
+    echo "<script>";
+    echo "alert('อัพเดทข้อมูลสำเร็จ !');";
+    echo "window.location='edit.php';";
+    echo "</script>";
     // header("Location:edit.php");
 
     
