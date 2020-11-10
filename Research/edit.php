@@ -58,7 +58,10 @@ $sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Statu
     </nav>
 
     <h2 class="title" style="font-weight: bold;Color:white;">รายชื่อโครงการ</h2>
-    <h4 style='margin-left:63%;margin-bottom:10px;margin-top:50px;'>ค้นหา : <input type="text" name="search" id="search" placeholder="ชื่อผู้วิจัย....." style="border: 1px solid"> หรือ <input type="text" name="search_re" id="search_re" placeholder="ชื่อโครงการ...." style="border: 1px solid"></h4>
+    <h4 style='margin-left:63%;margin-bottom:10px;margin-top:50px;'>ค้นหา : <input type="text" name="search" id="search" placeholder="ชื่อผู้วิจัย....." style="border: 1px solid"> 
+    หรือ <input type="text" name="search_re" id="search_re" placeholder="ชื่อโครงการ...." style="border: 1px solid"><br>
+    ปีการดำเนินงาน : <input type="text" name="search_re" id="yearStart" placeholder="ค้นหาจากปีการดำเนินงาน...." style="border: 1px solid">
+</h4>
 <div class="container">
     <div  style="margin-top: 20px;">
 <table id="table" class="table" >
@@ -67,6 +70,7 @@ $sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Statu
     <!-- <th id='tdd'>#</th> -->
     <th id='tdd' scope="col">ผู้วิจัย</th>
     <th id='tdd' scope="col">ชื่อโครงการวิจัย(ภาษาไทย)</th>
+    <th id='tdd' scope="col" style="display: none;">timestart</th>
     <th id='tdd' scope="col"><select name="" id="year"></select></th>
     <th id='tdd' scope="col"><select name="" id="publish">
         <option value="All_publish">การตีพิมพ์</option>
@@ -75,7 +79,7 @@ $sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Statu
     </select></th>
     <th id='tdd' scope="col"><select name="" id="approve" >
         <option value="All_approve">สถานะโครงการ</option>
-        <option value="เสนอโครงการ">เสนอโครงการ</option>
+        <option value="เสนอโครงการ">เสนอโครงการ</option><span></span>
         <option value="เซ็นสัญญา">เซ็นสัญญา</option>
         <option value="ขออนุมัติดำเนินโครงการ">ขออนุมัติดำเนินโครงการ</option>
         <option value="ขออนุมัติเบิกเงิน(รอบ1)">ขออนุมัติเบิกเงิน(รอบ1)</option>
@@ -91,6 +95,7 @@ $sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Statu
 <tbody>
     <?php
      $result = mysqli_query($conn,$sql);
+     
      while ($row = mysqli_fetch_assoc($result)){
          $funds_status = $row['Funds_status'];
          $funds_type = $row['Funds'];
@@ -98,12 +103,29 @@ $sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Statu
         //  echo $Re_id;
          $publish_status = $row['Published_status'];
          $CheckPublished_status = $row['Published_status'];
-         echo "<form action='detail.php'>";       
+         $StartTime = substr($row['Time_period'],6,-11) ;
+         $Stoptime = substr($row['Time_period'],17);
+         $Beween =  (int)$Stoptime-(int)$StartTime ;
+ 
+        // echo $Beween."<br>";
+        echo "<form action='detail.php'>";       
          echo "<tr>";
         //  echo "<td id='tdd'><input type='text' size='1' name='status_id' value=" .$row['No']. " readonly></td>" 
          echo "<td scope='row'>". $row['Name_Leader'] ."</td>" 
-         ."<td>". $row['NameRe_TH'] ."</td>"
-         ."<td style='text-align:center;'>". $row['Time_period'] ."</td>"
+         ."<td>". $row['NameRe_TH'] ."</td>";
+         if($Beween>0){
+             echo"<td style='display: none;'><p id='timestart' class='timestart' >$StartTime<br>";
+             for($Start = 0;$Start<$Beween;$Start++){
+                $StartTime++;
+                echo "$StartTime<br>";
+             }
+             
+             echo "</p></td>";
+         }
+         else{
+            echo "<td style='display: none;'><p id='timestart' class='timestart'>$StartTime<br></p></td>";
+         }
+         echo "<td style='text-align:center;'>". $row['Time_period'] ."</td>"
          ."<td style='text-align:center;'>"; if($publish_status == 1){
             echo "<p style='color: green;'>✔</p>";
         }
@@ -112,12 +134,12 @@ $sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Statu
         }
         echo "</td>";
         echo "<td style='text-align: center;'>". $row['Approve'] ."</td>";
-        echo "<td style='text-align: center;'>". $row['Bugget'] ."</td>";
+        echo "<td style='text-align: center;'>". number_format($row['Bugget']) ."</td>";
         // echo "<td><input type='submit' value='เพิ่มเติม'></td>";
         echo "<td><a href='detail.php?Re_id=$Re_id' style='text-decoration-line: none;'><button id='btn'>เพิ่มเติม</a></button></td>";
         echo "</tr>";
         echo "</form >"; 
-    
+
     }
     ?> 
 </tbody>
@@ -125,126 +147,158 @@ $sql = "SELECT * FROM (((research INNER JOIN fundsstatus ON research.Funds_Statu
 </div>
 </body>
 <script>
-    $('#publish').on("change", function() {
-        var x = document.getElementById('publish').value;
-        if(x == "All_publish"){
-            $('table tbody tr').show();
-        }
-        else{
-            var len = $('table tbody tr:not(.notfound) td:nth-child(4):contains("'+x+'")').length;
-        $('table tbody tr').hide();
- 
-        if(len > 0){
+    
+    $(document).ready(function(){
+       
+        
+            $('#publish').on("change", function() {
+            var x = document.getElementById('publish').value;
+            if(x == "All_publish"){
+                $('table tbody tr').show();
+            }
+            else{
+                var len = $('table tbody tr:not(.notfound) td:nth-child(5):contains("'+x+'")').length;
+            $('table tbody tr').hide();
+    
+            if(len > 0){
 
-        $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
-            $(this).closest('tr').show();
+            $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
+                $(this).closest('tr').show();
+            });
+            }
+            else{
+            $('.notfound').show();
+            }
+            }
         });
-        }
-        else{
-        $('.notfound').show();
-        }
-        }
-    });
-    $('#approve').on("change", function() {
-        var x = document.getElementById('approve').value;
-        if(x == "All_approve"){
-            $('table tbody tr').show();
-            console.log(x);
-        }
-        else{
-            var len = $('table tbody tr:not(.notfound) td:nth-child(5):contains("'+x+'")').length;
-        $('table tbody tr').hide();
-        console.log(x);
- 
-        if(len > 0){
+        $('#approve').on("change", function() {
+            var x = document.getElementById('approve').value;
+            if(x == "All_approve"){
+                $('table tbody tr').show();
+                // console.log(x);
+            }
+            else{
+                var len = $('table tbody tr:not(.notfound) td:nth-child(6):contains("'+x+'")').length;
+            $('table tbody tr').hide();
+            // console.log(x);
+    
+            if(len > 0){
 
-        $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
-            $(this).closest('tr').show();
+            $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
+                $(this).closest('tr').show();
+            });
+            }
+            else{
+            $('.notfound').show();
+            }
+            }
         });
-        }
-        else{
-        $('.notfound').show();
-        }
-        }
-    });
-    $('#year').on("change", function() {
-        var x = document.getElementById('year').value;
-        if(x == "All_year"){
-            $('table tbody tr').show();
-        }
-        else{
-            var len = $('table tbody tr:not(.notfound) td:nth-child(3):contains("'+x+'")').length;
-        $('table tbody tr').hide();
- 
-        if(len > 0){
+        $('#year').on("change", function() {
+            var x = document.getElementById('year').value;
+            if(x == "All_year"){
+                $('table tbody tr').show();
+            }
+            else{
+                
 
-        $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
-            $(this).closest('tr').show();
-        });
-        }
-        else{
-        $('.notfound').show();
-        }
-        }
-    });
-    $('#search').on("keyup", function() {
-        var x = document.getElementById('search').value;
-        if(x == "All_year"){
-            $('table tbody tr').show();
-        }
-        else{
-            var len = $('table tbody tr:not(.notfound) td:nth-child(1):contains("'+x+'")').length;
-        $('table tbody tr').hide();
- 
-        if(len > 0){
+                var len = $('table tbody tr:not(.notfound) td:nth-child(3):contains('+x+')').length;
 
-        $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
-            $(this).closest('tr').show();
-        });
-        }
-        else{
-        $('.notfound').show();
-        }
-        }
-    });
-    $('#search_re').on("keyup", function() {
-        var x = document.getElementById('search_re').value;
-        if(x == "All_year"){
-            $('table tbody tr').show();
-        }
-        else{
-            var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+x+'")').length;
-        $('table tbody tr').hide();
- 
-        if(len > 0){
+                $('table tbody tr').hide();
+        
+                if(len > 0){
 
-        $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
-            $(this).closest('tr').show();
+                    $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
+                        
+                        // console.log($(this).closest('tr'));
+                        $(this).closest('tr').show();
+                        
+                    });
+                }
+                else{
+                    $('.notfound').show();
+                }
+            }
         });
+        $('#yearStart').on("keyup", function() {
+            var x = document.getElementById('yearStart').value;
+            if(x == "All_year"){
+                $('table tbody tr').show();
+            }
+            else{
+                var len = $('table tbody tr:not(.notfound) td:nth-child(3):contains("'+x+'")').length;
+            $('table tbody tr').hide();
+    
+            if(len > 0){
+
+            $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
+                $(this).closest('tr').show();
+            });
+            }
+            else{
+            $('.notfound').show();
+            }
+            }
+        });
+        $('#search').on("keyup", function() {
+            var x = document.getElementById('search').value;
+            if(x == "All_year"){
+                $('table tbody tr').show();
+            }
+            else{
+                var len = $('table tbody tr:not(.notfound) td:nth-child(1):contains("'+x+'")').length;
+            $('table tbody tr').hide();
+    
+            if(len > 0){
+
+            $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
+                $(this).closest('tr').show();
+            });
+            }
+            else{
+            $('.notfound').show();
+            }
+            }
+        });
+        $('#search_re').on("keyup", function() {
+            var x = document.getElementById('search_re').value;
+            if(x == "All_year"){
+                $('table tbody tr').show();
+            }
+            else{
+                var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+x+'")').length;
+            $('table tbody tr').hide();
+    
+            if(len > 0){
+
+            $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
+                $(this).closest('tr').show();
+            });
+            }
+            else{
+            $('.notfound').show();
+            }
+            }
+        });
+        
+        var start = 9;
+        var end = new Date().getFullYear();
+        var option = "<option value='All_year'>ระยะเวลาดำเนินงาน</option>";
+        for (var year = end ; year >= end - start ; year--){
+            option += "<option>"+ year +"</option>";
         }
-        else{
-        $('.notfound').show();
-        }
-        }
+        document.getElementById("year").innerHTML = option;
+
+        $(document).ready(function(){
+            $(document).ready(function() {
+                $('#table').DataTable({
+                "ordering": false,
+                "searching": false
+                });
+                
+            } );
+        });
     });
     
-    var start = 9;
-    var end = new Date().getFullYear();
-    var option = "<option value='All_year'>ระยะเวลาดำเนินงาน</option>";
-    for (var year = end ; year >= end - start ; year--){
-        option += "<option>"+ year +"</option>";
-    }
-    document.getElementById("year").innerHTML = option;
-
-    $(document).ready(function(){
-        $(document).ready(function() {
-            $('#table').DataTable({
-            "ordering": false,
-            "searching": false
-            });
-            
-        } );
-    });
 </script>
 
     

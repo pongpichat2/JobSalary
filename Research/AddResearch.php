@@ -38,7 +38,7 @@ if(!isset($_SESSION['emailAdmin'])) {
     </nav>
     <div class="FormAddRe" style="background: white;">
         <div style="margin-left: 30px;">
-        <form action="insertResearch.php" method="POST">
+        <form action="insertResearch.php" method="POST" enctype="multipart/form-data">
             <p style="font-weight: bold;">ชื่อหัวหน้าโครงงาน :
             <select name="Leader_Re" class="Leader_Research" id="">
                 <option value="" selected disabled hidden>โปรดเลือกหัวหน้าโครงงาน</option>
@@ -117,7 +117,7 @@ if(!isset($_SESSION['emailAdmin'])) {
                         
                             <p> จำนวนผู้ร่วมวิจัย : <input type="text" id="Mebmer_Num" placeholder="จำนวนผู้วิจัย" class="Member_NumRe"> /คน 
                             <button type="button" class="But-AddMem" id="AddMem" onclick="add()">ยืนยัน</button> </p> 
-                            <div id="new_chq"></div>
+                             <div id="new_chq"></div>
                             <input type="hidden" value="1" id="total_chq">
 
 
@@ -129,7 +129,7 @@ if(!isset($_SESSION['emailAdmin'])) {
             
             <p style="font-weight: bold;"> 
             ชื่อโครงงาน : <input type="text" class="Re_Name" id="" placeholder="TH" name="NameRe_TH" required>
-            ภาษาอังกฤษ : <input type="text" class="Re_Name" name="NameRe_Eng" id="" placeholder="EN" required></p> 
+            ภาษาอังกฤษ : <input type="text" class="Re_Name"  name="NameRe_Eng" id="" placeholder="EN" required></p> 
                 <p style="font-weight: bold;"> ประเภทงานวิจัย : <Select id="Type_Re" name ="Type_Re" onchange="yesCheck(this);">
                     <option value="" selected disabled hidden>โปรดเลือกประเภทงานวิจัย</option>
                     <option value="การฝึกอบรม/สัมนา/อภิปรายและบรรยาย">การฝึกอบรม/สัมนา/อภิปรายและบรรยาย</option>
@@ -196,7 +196,7 @@ if(!isset($_SESSION['emailAdmin'])) {
                         <td>งวดที่ 2</td>
                         <td>งวดที่ 3</td>
                         <td>งวดที่ 4</td>
-                        <td>ค่าประเมิลผลงาน</td>
+                        <td>ค่าประกันผลงาน</td>
                         <td>รวม</td>
                         </tr>
                     </thead>
@@ -239,7 +239,7 @@ if(!isset($_SESSION['emailAdmin'])) {
             
 
             <div> <p style="font-weight: bold;">ระยะเวลาในการดำเนิน :
-                <input type="text" name="datefilter" class="Date-time-approve" value="" required>
+                <input type="text" name="datefilter" autocomplete="off" class="Date-time-approve" value="" required>
                 </p> 
             </div>
 
@@ -259,7 +259,7 @@ if(!isset($_SESSION['emailAdmin'])) {
                 </p>
                 <div>
                     <p style="font-weight: bold;">ระยะเวลาขอนุมัติ :
-                    <input type="text" name="Time_period" value="" class="Date-time-approve">
+                    <input type="text" name="Time_period" autocomplete="off" value="" class="Date-time-approve" >
                     </p> 
                 </div>
             </div>
@@ -276,11 +276,12 @@ if(!isset($_SESSION['emailAdmin'])) {
                         <input type="checkbox" class="checkbox4" name="type_Published_inter" id="Inter" value="1"> วารสารระดับชาติ
                         <input type="checkbox" class="checkbox4" name="type_Published_inter" id="Inter2" value="2"> วารสารระดับนานาชาติ <br>
                     </p>
-                    <p style="font-weight: bold;">ว/ด/ป ที่เผยแพร่ : <input type="text" name="DateDocument" value="" class="Date-time-approve" required></p>
+                    <p style="font-weight: bold;">ว/ด/ป ที่เผยแพร่ : <input type="text" autocomplete="off" name="DateDocument" value="" class="Date-time-approve" required></p>
                     
                     <div>
-                    <p style="font-weight: bold;">  Volome : <input type="text" placeholder="No." class="Other" name="Volome"> No. ISSUE : <input type="text" class="Other" placeholder="No. ISSUE" name="ISSUE"> 
-                        หน้าที่พิมพ์ :  <input type="text" name="Page_Published" class="Other" placeholder="หน้าที่พิมพ์"></p>
+                    <p style="font-weight: bold;">  Volome : <input type="text" placeholder="No." class="Other" name="Volome"> No. ISSUE : <input type="text" class="Other" placeholder="No. ISSUE" name="ISSUE"> <br>
+                        หน้าที่พิมพ์ :  <input type="text" name="Page_Published" class="Other" placeholder="หน้าที่พิมพ์">
+                        อัปโหลดผลงาน : <input type="file" name="Myfile"><br></p>
                     </div>
                     </fieldset>
                 </div>

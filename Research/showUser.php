@@ -507,7 +507,7 @@ $Re_id = $_REQUEST['Re_id'];
             } ?>
             <?php
          
-         echo "<p class='Buggettext'>".'เงินทุน : งวดที่ 1 :'.number_format($cost1).", งวดที่ 2 : ".number_format($cost2).", งวดที่ 3 : ".number_format($cost3).", งวดที่ 4 : ".number_format($cost4).", ค่าประเมิลผลงาน : ".number_format($Port)." รวมเป็นเงิน : ".number_format($Bugget_Re)." บาท"."</p>";
+         echo "<p class='Buggettext'>".'เงินทุน : งวดที่ 1 :'.number_format($cost1).", งวดที่ 2 : ".number_format($cost2).", งวดที่ 3 : ".number_format($cost3).", งวดที่ 4 : ".number_format($cost4).", ค่าประกันผลงาน : ".number_format($Port)." รวมเป็นเงิน : ".number_format($Bugget_Re)." บาท"."</p>";
             if($type_vat == '1'){
                 $sql_vat = "SELECT * FROM research INNER JOIN vat ON research.Re_ID = vat.Re_ID WHERE research.Re_ID ='$Re_id'";
                 $sql_vat_query = mysqli_query($conn,$sql_vat);
@@ -549,21 +549,17 @@ $Re_id = $_REQUEST['Re_id'];
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><?php echo $approve ?></td>
-                    <td><?php echo $Time_approve?></td>
-                </tr>
+               
                 
                     <?php
                     $Log_Approve = "SELECT * FROM research INNER JOIN log_approve ON research.Re_ID = log_approve.Re_ID INNER JOIN ";
                     $Log_Approve .= "approve_status ON log_approve.Approve_status = approve_status.Approve_ID WHERE research.Re_ID = '$Re_id'";
                     $Log_Approve_Query = mysqli_query($conn,$Log_Approve);
                     if(mysqli_num_rows($Log_Approve_Query)>0){
-                        $numrow = 2;
+                        $numrow = 1;
                         while($rowLog_Approve = mysqli_fetch_assoc($Log_Approve_Query)){
                             echo "<tr>";
-                            echo "<td>".$rowLog_Approve['NO']."</td>";
+                            echo "<td>".$numrow."</td>";
                             echo "<td>".$rowLog_Approve['Approve']."</td>";
                             echo "<td>".$rowLog_Approve['Time_period_log']."</td>";
                             echo "</tr>";

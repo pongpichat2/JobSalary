@@ -32,6 +32,7 @@ INNER JOIN name_leader ON research.ID_Leader = name_leader.ID_Leader)";
     </head>
 
 <body>
+
 <nav>
         <ul class="menu">
             
@@ -108,7 +109,7 @@ INNER JOIN name_leader ON research.ID_Leader = name_leader.ID_Leader)";
         }
         echo "</td>";
         echo "<td style='text-align: center;'>". $row['Approve'] ."</td>";
-        echo "<td style='text-align: center;'>". $row['Bugget'] ."</td>";
+        echo "<td style='text-align: center;'>". number_format($row['Bugget']) ."</td>";
         // echo "<td><input type='submit' value='เพิ่มเติม'></td>";
         echo "<td><a href='showUser.php?Re_id=$Re_id'><button id='btn'>เพิ่มเติม</a></button></td>";
         echo "</tr>";

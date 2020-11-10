@@ -1,18 +1,18 @@
-function add(){
-    $("#new_chq").empty();
+// function add(){
+//     $("#new_Mem").empty();
    
-    var i= document.getElementById("Mebmer_Num").value ;
+//     var i= document.getElementById("Mebmer_Num").value ;
     
-    for (Num = 1; Num <= i; Num++) {
+//     for (Num = 1; Num <= i; Num++) {
 
-        var new_input="<input type='text' class='MemberResearch' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required >";
-        // var new_input="<input type='text' class='' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ><button type='button' class='but-Delete' onclick='remove();' id='MemberRe_"+Num+"'>x</button>";
-        $('#new_chq').append(new_input);
-        $('#total_chq').val(i);
-    }
+//         var new_input= "<p> ชื่อผู้ร่วมวิจัยคนที่ : "+Num+" <input type='text' class='MemberResearch' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ></p>";
+//         // var new_input="<input type='text' class='' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ><button type='button' class='but-Delete' onclick='remove();' id='MemberRe_"+Num+"'>x</button>";
+//         $('#new_Mem').append(new_input);
+//         $('#total_chq').val(i);
+//     }
 
 
-}
+// }
 function addnoneMem(){
     $("#new_chq").empty();
    
@@ -20,7 +20,7 @@ function addnoneMem(){
     
     for (Num = 1; Num <= i; Num++) {
 
-        var new_input="<input type='text' class='MemberResearch' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required >";
+        var new_input="<p> ชื่อผู้ร่วมวิจัยคนที่ : "+Num+" <input type='text' class='MemberResearch' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ></p>";
         // var new_input="<input type='text' class='' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ><button type='button' class='but-Delete' onclick='remove();' id='MemberRe_"+Num+"'>x</button>";
         $('#new_chq').append(new_input);
         $('#total_chq').val(i);

@@ -1,5 +1,6 @@
 $(document).ready(function(){
     // checkbox code ผุ้ร่วมวิจัย 
+    
     $('.checkbox').click(function(){
         $('.checkbox').each(function(){
             $(this).prop('checked', false); 
@@ -108,12 +109,40 @@ $("#Capital_Sidein").click(function () {
 
     
     $(function() {
-
+        var yearst = (new Date().getFullYear())+543;
+        console.log(yearst);
         $('input[name="datefilter"]').daterangepicker({
-            
+            "drops": "auto",
+            showDropdowns: true,
             autoUpdateInput: false,
+            // defaultDate: yearst,
+         
             locale: {
-                "format": "DD/MM/YYYY"
+                "format": "DD/MM/YYYY",
+                "weekLabel": "W",
+        "daysOfWeek": [
+            "อา.",
+            "จ.",
+            "อ.",
+            "พ.",
+            "พฤ.",
+            "ศ.",
+            "ส."
+        ],
+        "monthNames": [
+            "มกราคม",
+            "กุมภาพันธ์",
+            "มีนาคม",
+            "เมษายน",
+            "พฤษภาคม",
+            "มิถุนายน",
+            "กรกฎาคม",
+            "สิงหาคม",
+            "กันยายน",
+            "ตุลาคม",
+            "พฤศจิกายน",
+            "ธันวาคม"
+        ],
             }
         });
 
@@ -129,10 +158,38 @@ $("#Capital_Sidein").click(function () {
     $(function() {
 
         $('input[name="Time_period"]').daterangepicker({
-            
+            "drops": "auto",
+            showDropdowns: true,
             autoUpdateInput: false,
+         
             locale: {
-                "format": "DD/MM/YYYY"
+          
+                
+                'format': "DD/MM/YYYY",
+                "weekLabel": "W",
+        "daysOfWeek": [
+            "อา.",
+            "จ.",
+            "อ.",
+            "พ.",
+            "พฤ.",
+            "ศ.",
+            "ส."
+        ],
+        "monthNames": [
+            "มกราคม",
+            "กุมภาพันธ์",
+            "มีนาคม",
+            "เมษายน",
+            "พฤษภาคม",
+            "มิถุนายน",
+            "กรกฎาคม",
+            "สิงหาคม",
+            "กันยายน",
+            "ตุลาคม",
+            "พฤศจิกายน",
+            "ธันวาคม"
+        ],
             }
         });
 
@@ -148,12 +205,40 @@ $("#Capital_Sidein").click(function () {
 
     $(function() {
         $('input[name="DateDocument"]').daterangepicker({
+            
+            "drops": "auto",
+           
             // autoUpdateInput: false,
             singleDatePicker: true,
             showDropdowns: true,
             minYear: 1900,
             locale: {
-                "format": "DD/MM/YYYY"
+                
+                "format": "DD/MM/YYYY",
+                "weekLabel": "W",
+        "daysOfWeek": [
+            "อา.",
+            "จ.",
+            "อ.",
+            "พ.",
+            "พฤ.",
+            "ศ.",
+            "ส."
+        ],
+        "monthNames": [
+            "มกราคม",
+            "กุมภาพันธ์",
+            "มีนาคม",
+            "เมษายน",
+            "พฤษภาคม",
+            "มิถุนายน",
+            "กรกฎาคม",
+            "สิงหาคม",
+            "กันยายน",
+            "ตุลาคม",
+            "พฤศจิกายน",
+            "ธันวาคม"
+        ],
             }
             
         });
@@ -390,7 +475,7 @@ function add(){
     
     for (Num = 1; Num <= i; Num++) {
 
-        var new_input="<input type='text' class='MemberResearch' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required >";
+        var new_input="<p> ชื่อผู้ร่วมวิจัยคนที่ : "+Num+" <input type='text' class='MemberResearch' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ></p>";
         // var new_input="<input type='text' class='' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ><button type='button' class='but-Delete' onclick='remove();' id='MemberRe_"+Num+"'>x</button>";
         $('#new_chq').append(new_input);
         $('#total_chq').val(i);

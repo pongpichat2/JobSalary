@@ -116,7 +116,7 @@ if(!isset($_SESSION['emailAdmin'])) {
     ?>
     <div class="FormAddRe" style="background: white;">
     <div style="margin-left: 30px;">
-    <form action="insertResearch.php" method="POST">
+    <form action="insertResearch.php" method="POST" enctype="multipart/form-data">
         <p style="font-weight: bold;">ชื่อหัวหน้าโครงงาน : 
         <select name="Leader_Re" class="Leader_Research" id="">
                 <option <?php if($ID_Leader == '1'){ echo 'selected'; }?> value="1">ผศ.ดร. วสันต์ คำสนาม</option>
@@ -203,14 +203,16 @@ if(!isset($_SESSION['emailAdmin'])) {
                             echo"<button type='button' class='But-AddMem' id='AddMem' onclick='add();'>ยืนยัน</button> </p> ";
                             echo "<div id='new_chq'>";
                             if(mysqli_num_rows($member_query)>0){
-                            while ($member_row = mysqli_fetch_assoc($member_query)){
                                 $Num = 1;
+                            while ($member_row = mysqli_fetch_assoc($member_query)){
+                                
                                 $member_name = $member_row['MemberName'];
                                 $member_no = $member_row['NO'];
                                 echo "<input type='text'  name='no[]' value='$member_no' style='display: none;'>";
-                                echo" <input type='text' class='MemberResearch' value='$member_name' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ ".$Num."'>";
-                                }
+                                echo"<p> ชื่อผู้ร่วมวิจัยคนที่ : ".$Num." <input type='text' class='MemberResearch' value='$member_name' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ ".$Num."'> </p>";
                                 $Num++;
+                            }
+                                
                             }
                             
                             echo "</div>";
@@ -307,7 +309,7 @@ if(!isset($_SESSION['emailAdmin'])) {
                         <td>งวดที่ 2</td>
                         <td>งวดที่ 3</td>
                         <td>งวดที่ 4</td>
-                        <td>ค่าประเมิลผลงาน</td>
+                        <td>ค่าประกันผลงาน</td>
                         <td>รวม</td>
                         </tr>
                     </thead>
@@ -383,7 +385,7 @@ if(!isset($_SESSION['emailAdmin'])) {
                 </table>
 
                 <div style="font-weight: bold; margin-top:10px;">ระยะเวลาในการดำเนิน :
-            <input type="text" name="datefilter" class="Date-time-approve" value="<?php echo $Time_Re;?>" ></div>
+            <input type="text" name="datefilter" class="Date-time-approve" value="<?php echo $Time_Re;?>" autocomplete="off"></div>
 
         </div>
         </fieldset>
@@ -402,18 +404,14 @@ if(!isset($_SESSION['emailAdmin'])) {
                 </tr>
             </thead>
             <tbody>
-            <tr>
-                        <td style="text-align: center;">1</td>
-                        <td><?php echo $approve ?></td>
-                        <td><?php echo $Time_approve?></td>
-                        </tr>
+            
                 
                     <?php
                     $Log_Approve = "SELECT * FROM research INNER JOIN log_approve ON research.Re_ID = log_approve.Re_ID INNER JOIN ";
                     $Log_Approve .= "approve_status ON log_approve.Approve_status = approve_status.Approve_ID WHERE research.Re_ID = '$Re_id'";
                     $Log_Approve_Query = mysqli_query($conn,$Log_Approve);
                     if(mysqli_num_rows($Log_Approve_Query)>0){
-                        $numrow = 2;
+                        $numrow = 1;
                         while($rowLog_Approve = mysqli_fetch_assoc($Log_Approve_Query)){
                             echo "<tr>";
                             echo "<td style='text-align:center'>".$numrow."</td>";
@@ -440,7 +438,7 @@ if(!isset($_SESSION['emailAdmin'])) {
                     <option value="7">ขออนุมัติขยายเวลา</option>
                     <option value="8">สิ้นสุดโครงการ</option>
                 </select></td>
-                    <td><input type="text" name="Time_period" value="" class="Date-time-approve" placeholder="โปรดกรอกระยะเวลา ..." ></td>
+                    <td><input type="text" name="Time_period" value="" class="Date-time-approve" placeholder="โปรดกรอกระยะเวลา ..."autocomplete="off" ></td>
                 </tr>
             </tbody>
         </table>
@@ -458,12 +456,13 @@ if(!isset($_SESSION['emailAdmin'])) {
                     <input type="checkbox" class="checkbox4" name="type_Published_inter" id="Inter2" value="2" <?php if($Published_Status == '1'){if($type_Published_inter == '2'){echo 'checked';}}?>> วารสารระดับนานาชาติ <br>
 
                 <p style="font-weight: bold;">
-                ว/ด/ป ที่เผยแพร่ : <input type="text" class="Date-time-approve" name="DateDocument" value="<?php if($Published_Status == '1'){echo $date_Published;}?>"  >
+                ว/ด/ป ที่เผยแพร่ : <input type="text" class="Date-time-approve" name="DateDocument" autocomplete="off" value="<?php if($Published_Status == '1'){echo $date_Published;}?>"  >
                 </p>
                 <div style="font-weight: bold;">
                     Volome : <input type="text" class="Other" placeholder="No." name="Volome" value="<?php if($Published_Status == '1'){echo $Volume;}?>">
                     No. ISSUE : <input type="text" class="Other" placeholder="No. ISSUE" name="ISSUE" value="<?php if($Published_Status == '1'){echo $Issue;}?>"> <br>
                     หน้าที่พิมพ์ :  <input type="text" class="Other" name="Page_Published" placeholder="หน้าที่พิมพ์" value="<?php if($Published_Status == '1'){echo $Page;}?>">
+                    อัปโหลดผลงาน : <input type="file" name="Myfile">
                 </div>
                 </p>
                 </fieldset>
@@ -701,10 +700,35 @@ if(!isset($_SESSION['emailAdmin'])) {
         $(function() {
 
             $('input[name="datefilter"]').daterangepicker({
-                
+                "showDropdowns": true,
+                "drops": "auto",
                 autoUpdateInput: false,
                 locale: {
-                    "format": "DD/MM/YYYY"
+                    "format": "DD/MM/YYYY",
+                "weekLabel": "W",
+        "daysOfWeek": [
+            "อา.",
+            "จ.",
+            "อ.",
+            "พ.",
+            "พฤ.",
+            "ศ.",
+            "ส."
+        ],
+        "monthNames": [
+            "มกราคม",
+            "กุมภาพันธ์",
+            "มีนาคม",
+            "เมษายน",
+            "พฤษภาคม",
+            "มิถุนายน",
+            "กรกฎาคม",
+            "สิงหาคม",
+            "กันยายน",
+            "ตุลาคม",
+            "พฤศจิกายน",
+            "ธันวาคม"
+        ],
                 }
             });
 
@@ -720,10 +744,35 @@ if(!isset($_SESSION['emailAdmin'])) {
         $(function() {
 
             $('input[name="Time_period"]').daterangepicker({
-                
+                "showDropdowns": true,
+                "drops": "auto",
                 autoUpdateInput: false,
                 locale: {
-                    "format": "DD/MM/YYYY"
+                    "format": "DD/MM/YYYY",
+                "weekLabel": "W",
+        "daysOfWeek": [
+            "อา.",
+            "จ.",
+            "อ.",
+            "พ.",
+            "พฤ.",
+            "ศ.",
+            "ส."
+        ],
+        "monthNames": [
+            "มกราคม",
+            "กุมภาพันธ์",
+            "มีนาคม",
+            "เมษายน",
+            "พฤษภาคม",
+            "มิถุนายน",
+            "กรกฎาคม",
+            "สิงหาคม",
+            "กันยายน",
+            "ตุลาคม",
+            "พฤศจิกายน",
+            "ธันวาคม"
+        ],
                 }
             });
 
@@ -741,10 +790,35 @@ if(!isset($_SESSION['emailAdmin'])) {
             $('input[name="DateDocument"]').daterangepicker({
                 // autoUpdateInput: false,
                 singleDatePicker: true,
+                "drops": "auto",
                 showDropdowns: true,
                 minYear: 1900,
                 locale: {
-                    "format": "DD/MM/YYYY"
+                    "format": "DD/MM/YYYY",
+                "weekLabel": "W",
+        "daysOfWeek": [
+            "อา.",
+            "จ.",
+            "อ.",
+            "พ.",
+            "พฤ.",
+            "ศ.",
+            "ส."
+        ],
+        "monthNames": [
+            "มกราคม",
+            "กุมภาพันธ์",
+            "มีนาคม",
+            "เมษายน",
+            "พฤษภาคม",
+            "มิถุนายน",
+            "กรกฎาคม",
+            "สิงหาคม",
+            "กันยายน",
+            "ตุลาคม",
+            "พฤศจิกายน",
+            "ธันวาคม"
+        ],
                 }
                 
             });
@@ -759,7 +833,7 @@ if(!isset($_SESSION['emailAdmin'])) {
         
         for (Num = 1; Num <= remain; Num++) {
             Nummem++
-            var new_input="<input type='text' class='MemberResearch'  name='Member[]' placeholder='ผู้ร่วมวิจัยคน"+Nummem+"' required >";
+            var new_input="<p> ชื่อผู้ร่วมวิจัยคนที่ : "+Nummem+" <input type='text' class='MemberResearch'  name='Member[]' placeholder='ผู้ร่วมวิจัยคน"+Nummem+"' required ></p>";
             // var new_input="<input type='text' class='' id='Member_"+Num+"' name='Member[]' placeholder='ผู้ร่วมวิจัยคนที่ "+Num+"' required ><button type='button' class='but-Delete' onclick='remove();' id='MemberRe_"+Num+"'>x</button>";
             $('#new_Mem').append(new_input);
             $('#total_chq').val(i);

@@ -41,7 +41,8 @@ $sql = "SELECT * FROM research INNER JOIN name_leader ON research.ID_Leader = na
 
 
     <h4 style="margin-left:55%;margin-bottom:-20px;margin-top:2%;font-family: 'Sarabun', sans-serif;" >ค้นหา <input type="text" name="search" id="search" placeholder="ชื่อโครงการวิจัย...." style="border: 1px solid"> หรือ 
-    <input type="text" name="search_re" id="search_re" placeholder="ชื่อหัวหน้าโครงการ...." style="border: 1px solid">
+    <input type="text" name="search_re" id="search_re" placeholder="ชื่อหัวหน้าโครงการ...." style="border: 1px solid"><br>
+    ปีการดำเนินงาน : <input type="text" name="search_re" id="yearStart" placeholder="ค้นหาจากปีการดำเนินงาน...." style="border: 1px solid">
     </h4>
     <button onclick="exel_export()" class="But-excel" style="width:110px;height:35px;margin-left:45px;">Get Exel <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
 width="24" height="24"
@@ -52,7 +53,9 @@ style=" fill:#000000;"><g transform="translate(4.73,4.73) scale(0.945,0.945)"><g
     <table id="table" class="table" >
         <thead class="thead-dark">
         <tr>
+            <th id='tdd' scope="col" style="display: none;" >timestart</th>
             <th id='tdd' scope="col">ชื่อโครงการวิจัย(ภาษาไทย)</th>
+            
             <th id='tdd' scope="col">
             <select name="" id="searchSelect">
                 <option value="All" >โปรดเลือก...</option>
@@ -90,16 +93,33 @@ style=" fill:#000000;"><g transform="translate(4.73,4.73) scale(0.945,0.945)"><g
                     $ShareBug = round($Share,4);
                     // echo $ShareBug."<br>";
                     $Remain = $rowtatalfaculty['faculty_total']*($ShareBug/100);
-    
+                    
                     $Sum = $bugget+$Remain;
+
+                    $StartTime = substr($row['Time_period'],6,-11) ;
+                    $Stoptime = substr($row['Time_period'],17);
+                    $Beween =  (int)$Stoptime-(int)$StartTime ;
                     // echo $ShareBug."<br>";
                     echo "<tr>";
+                    if($Beween>0){
+                        echo"<td style='display: none;'><p id='timestart' class='timestart' >$StartTime<br>";
+                        for($Start = 0;$Start<$Beween;$Start++){
+                           $StartTime++;
+                           echo "$StartTime<br>";
+                        }
+                        
+                        echo "</p></td>";
+                    }
+                    else{
+                       echo "<td style='display: none;'><p id='timestart' class='timestart'>$StartTime<br></p></td>";
+                    }
                     // $name_Research = $row['NameRe_TH'];
                     echo "<td style='font-weight:bold;'>" .$row["NameRe_TH"]."</td>";
 
-                    echo "<td>";
+                    echo "<td style='text-align:center;font-weight:bold;'>";
                     if($row["Funds_status"] == '1'){
                         echo "-";
+                        echo "<input type='text' name='Funds_status' id='Funds_status' value=".$row['Funds_status']." style='display:none;'>";
           
                     }
                     elseif($row["Funds_status"] == '2'){
@@ -161,6 +181,18 @@ style=" fill:#000000;"><g transform="translate(4.73,4.73) scale(0.945,0.945)"><g
                             else{
                                 echo "งวดที่ 3 :".number_format($rowfaculty['faculty3'])."<br>";
                             }
+                            if($rowfaculty['faculty4'] == "" || $rowfaculty['faculty4'] == NULL ){
+                                continue;
+                            }
+                            else{
+                                echo "งวดที่ 4 :".number_format($rowfaculty['faculty4'])."<br>";
+                            }
+                            if($rowfaculty['faculty_Port'] == "" || $rowfaculty['faculty_Port'] == NULL ){
+                                continue;
+                            }
+                            else{
+                                echo "ค่าประกันผลงาน :".number_format($rowfaculty['faculty_Port'])."<br>";
+                            }
                             
                             
                             echo "รวมเป็นเงิน :". number_format($rowfaculty['faculty_total']);
@@ -179,6 +211,26 @@ style=" fill:#000000;"><g transform="translate(4.73,4.73) scale(0.945,0.945)"><g
     </div>
 </body>
 <script>
+    $('#yearStart').on("keyup", function() {
+            var x = document.getElementById('yearStart').value;
+            if(x == "All_year"){
+                $('table tbody tr').show();
+            }
+            else{
+                var len = $('table tbody tr:not(.notfound) td:nth-child(1):contains("'+x+'")').length;
+            $('table tbody tr').hide();
+    
+            if(len > 0){
+
+            $('table tbody tr:not(.notfound) td:contains("'+x+'")').each(function(){
+                $(this).closest('tr').show();
+            });
+            }
+            else{
+            $('.notfound').show();
+            }
+            }
+        });
     $('#searchSelect').on("change", function() {
         var x = document.getElementById('searchSelect').value;
         
@@ -186,7 +238,7 @@ style=" fill:#000000;"><g transform="translate(4.73,4.73) scale(0.945,0.945)"><g
             $('table tbody tr').show();
         }
         else{
-            var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+x+'")').length;
+            var len = $('table tbody tr:not(.notfound) td:nth-child(3):contains("'+x+'")').length;
         $('table tbody tr').hide();
  
         if(len > 0){
@@ -209,7 +261,7 @@ style=" fill:#000000;"><g transform="translate(4.73,4.73) scale(0.945,0.945)"><g
             $('table tbody tr').show();
         }
         else{
-            var len = $('table tbody tr:not(.notfound) td:nth-child(1):contains("'+x+'")').length;
+            var len = $('table tbody tr:not(.notfound) td:nth-child(2):contains("'+x+'")').length;
         $('table tbody tr').hide();
  
         if(len > 0){
@@ -229,7 +281,7 @@ style=" fill:#000000;"><g transform="translate(4.73,4.73) scale(0.945,0.945)"><g
             $('table tbody tr').show();
         }
         else{
-            var len = $('table tbody tr:not(.notfound) td:nth-child(3):contains("'+x+'")').length;
+            var len = $('table tbody tr:not(.notfound) td:nth-child(4):contains("'+x+'")').length;
         $('table tbody tr').hide();
  
         if(len > 0){
@@ -258,7 +310,7 @@ style=" fill:#000000;"><g transform="translate(4.73,4.73) scale(0.945,0.945)"><g
         // console.log($("#search").val());
         // top.location.href="test.php?select_type="+$("#searchSelect").val();
         // top.location.href="test.php?select_type="+$("#searchSelect").val()+"&search="$("#search").val()+"&search_re="+$("#search_re").val();
-        top.location.href="reportExel.php?search="+$("#search").val()+"&search_re="+$("#search_re").val()+"&select_type="+$("#searchSelect").val();
+        top.location.href="reportexel.php?search="+$("#search").val()+"&search_re="+$("#search_re").val()+"&select_type="+$("#searchSelect").val()+"&yearStart="+$("#yearStart").val();
         // top.location.href="test.php?search_re="+$("#search_re").val();
     }
 

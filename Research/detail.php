@@ -38,6 +38,29 @@ $_SESSION['refresh'] = 1;
         
     </nav>
     <?php
+    require_once __DIR__ . '/vendor/autoload.php';
+
+    $defaultConfig = (new Mpdf\Config\ConfigVariables())->getDefaults();
+    $fontDirs = $defaultConfig['fontDir'];
+
+    $defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
+    $fontData = $defaultFontConfig['fontdata'];
+
+    $mpdf = new \Mpdf\Mpdf([
+        'fontDir' => array_merge($fontDirs, [
+            __DIR__ . '/tmp',
+        ]),
+        'fontdata' => $fontData + [
+            'sarabun' => [
+                'R' => 'THSarabunNew.ttf',
+                'I' => 'THSarabunNew Italic.ttf',
+                'B' => 'THSarabunNew Bold.ttf',
+                'BI' => 'THSarabunNew BoldItalic.ttf'
+            ]
+        ],
+        'default_font' => 'sarabun'
+    ]);
+ob_start();
     //leader_name and status_stake
     $leader_sql = "SELECT * FROM research INNER JOIN name_leader ON research.ID_Leader = name_leader.ID_Leader INNER JOIN approve_status ON research.Approve_status = approve_status.Approve_ID WHERE Re_ID = '$Re_id'";
 
@@ -92,6 +115,7 @@ $_SESSION['refresh'] = 1;
 
 
     $Check_Published_sql = "SELECT * FROM research INNER JOIN published ON research.Re_id = published.Re_id WHERE research.Re_ID = '$Re_id'";
+    // echo $Check_Published_sql;
     $Published_query = mysqli_query($conn,$Check_Published_sql);
     if(mysqli_num_rows($Published_query)==1){
         $row_Published = mysqli_fetch_assoc($Published_query);
@@ -100,8 +124,21 @@ $_SESSION['refresh'] = 1;
         $Volume = $row_Published['Volume'];
         $Issue = $row_Published['Issue'];
         $Page = $row_Published['Page'];
-
-
+    }
+    $Check_Published_sql1 = "SELECT * FROM research INNER JOIN published ON research.Re_id = published.Re_id ";
+    $Check_Published_sql1 .= " INNER JOIN pro_name ON research.Re_id = pro_name.Re_ID WHERE research.Re_ID = '$Re_id'";
+    // echo $Check_Published_sql1;
+    // echo $Check_Published_sql;
+    $Published_query1 = mysqli_query($conn,$Check_Published_sql1);
+    if(mysqli_num_rows($Published_query1)>0){
+        $row_Published = mysqli_fetch_assoc($Published_query1);
+        $proname = $row_Published['Pname'];
+        $pro_status = $row_Published['pro_status'];
+    }
+    if(mysqli_num_rows($Published_query1)==0){
+        $row_Published = mysqli_fetch_assoc($Published_query1);
+        $proname = "";
+        $pro_status = "";
     }
 
     ?>
@@ -198,18 +235,14 @@ $_SESSION['refresh'] = 1;
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><?php echo $approve ?></td>
-                    <td><?php echo $Time_approve?></td>
-                </tr>
+                
                 
                     <?php
                     $Log_Approve = "SELECT * FROM research INNER JOIN log_approve ON research.Re_ID = log_approve.Re_ID INNER JOIN ";
                     $Log_Approve .= "approve_status ON log_approve.Approve_status = approve_status.Approve_ID WHERE research.Re_ID = '$Re_id'";
                     $Log_Approve_Query = mysqli_query($conn,$Log_Approve);
                     if(mysqli_num_rows($Log_Approve_Query)>0){
-                        $numrow = 2;
+                        $numrow = 1;
                         while($rowLog_Approve = mysqli_fetch_assoc($Log_Approve_Query)){
                             echo "<tr>";
                             echo "<td>".$numrow."</td>";
@@ -244,6 +277,7 @@ $_SESSION['refresh'] = 1;
                     Volome : <?php if($Published_Status == '1'){echo $Volume;}?>
                     No. ISSUE : <?php if($Published_Status == '1'){echo $Issue;}?>
                     หน้าที่พิมพ์ :  <?php if($Published_Status == '1'){echo $Page;}?>
+                    <?php if($pro_status==1){echo "<br><br>ผลงานที่อัปโหลด: "; echo "<a href='".$proname."' style='color: blue;'>รายละเอียด</a>";} ?>
                 </div>
                 </p>
                 </fieldset>
@@ -252,10 +286,19 @@ $_SESSION['refresh'] = 1;
             if($Published_Status == '2'){echo '<p style="font-weight: bold;">ไม่มีผลงานตีพิมพ์</p>';}
              ?>
         </div>
+        <?php
+    $html = ob_get_contents();
+    $mpdf->WriteHTML($html);
+    // $mpdf->WriteHTML("dfdf");
+    $mpdf->Output("Myreport.pdf");
+    ob_flush();
+
+    ?>
 
         <input type="text" name="Re_id_Edit" value="<?php echo $Re_id;?>" style="display: none;">
         <div style="text-align: center; height: 70px; margin-top:20px;">
         <button type="submit" class="Btu-Sub-Back" value="back" name="but_Submit">Back</button>
+        <button type="button" class="Btu-Sub-Edit" value="" name="" style="width:180px;"><a href="Myreport.pdf" class="btn btn-primary" style="color:blue;">โหลดรายงาน (pdf)</a></button>
         <button type="submit" class="Btu-Sub-Edit" value="Edit" name="but_Submit">Edit</button>
         <button type="submit" class="Btu-Sub-Delete" value="Delete" name="but_Submit" onClick="return confirm('คุณต้องการที่จะลบข้อมูลนี้หรือไม่ ?');">Delete</button>
         </div>

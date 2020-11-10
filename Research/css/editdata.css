@@ -152,9 +152,7 @@
         transition: 0.4s;
         font-family: 'Sarabun', sans-serif;
     }
-    select:focus{
-        background: rgba(151, 57, 57, 0.7);
-    }
+   
     nav{
     top: 0;
     background: #222;

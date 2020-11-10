@@ -160,9 +160,9 @@ if($But_Sub == 'Insert'){
     // echo $sqlResearch;
     $result = mysqli_query($conn,$sqlResearch);
 
-    // $Log_approve = "INSERT INTO log_approve (Re_ID, Approve_status, Time_period_log) Value ('$Re_ID','$Approve_Type','$Time_period')";
+    $Log_approve = "INSERT INTO log_approve (Re_ID, Approve_status, Time_period_log) Value ('$Re_ID','$Approve_Type','$Time_period')";
 
-    //     mysqli_query($conn,$Log_approve);
+        mysqli_query($conn,$Log_approve);
 
     // มีผู้ร่วมวิจัย
     if($StatusMemRe == "1"){
@@ -182,12 +182,40 @@ if($But_Sub == 'Insert'){
     if($Published_Status == "1"){
         $sqlPublished = "INSERT INTO published (Re_ID, TypePublished, date_published, Volume, Issue, Page) Value ('$Re_ID', '$type_Publishedinter', '$datePublished','$Volome','$ISSUE','$PageNo')";
         $result3 = mysqli_query($conn,$sqlPublished);
-        echo "seccess";
+        
+        $target_dir = "uploads/";
+        $target_name_file = uniqid(). "_" . basename($_FILES["Myfile"]["name"]);  //สร้างชื่อไฟล์ใหม่ที่ไม่ซ้ำกันทำให้อัพโหลดลง server ไม่เกิดปัญหา
+        $target_file = $target_dir . $target_name_file;
+        $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));  //เช็คนามสกุลของไฟล์ว่าคือไฟล์อะไร
+        if ($FileType == "pdf" || $FileType == "docx"){
+            if (move_uploaded_file($_FILES["Myfile"]["tmp_name"], $target_file)) {
+                // echo $target_name_file . " has been uploaded.";
+                $sql_project = "INSERT INTO pro_name (Re_ID,pro_status,Pname) VALUE ('$Re_ID','1','$target_file')";
+                $sql_project_query = mysqli_query($conn,$sql_project);
+                $sql_research_pro = "UPDATE published SET pro_status = '1' WHERE Re_id = '$Re_ID'";
+                $sql_research_pro_query = mysqli_query($conn,$sql_research_pro);
+                
+            } else {
+                echo "<script>";
+                echo "alert('Sorry, there was an error uploading your file.');";
+                // echo "window.location='main.php'";
+                echo "</script>";
+                // exit();
+            }
+        }
+        if ($FileType != "pdf" && $FileType != "docx"){
+            echo "<script>";
+            echo "alert('be not PDF or docx file');";
+            // echo "window.location='edit.php'";
+            echo "</script>";
+            // exit();
+        } 
     }
 
     // กองทุนภายใน
     if($Status_Funds == "1"){
         $sql_funds_in = "INSERT INTO funds_in (Re_ID, Name_Agency) Value ('$Re_ID','$Agencyin')";
+        echo $sql_funds_in;
         $result4 = mysqli_query($conn,$sql_funds_in);
     }
     // กองทุนภายนอก
@@ -220,7 +248,7 @@ elseif($But_Sub == 'Update'){
         }
 
         $sqlResearch = "UPDATE research SET ID_Leader = '$LeaderName', NameRe_TH = '$NameRe_TH', NameRe_ENG = '$NameRe_Eng', Type_research = '$TypeRe' ";
-        $sqlResearch .= ",cost1 = '$cost1', cost2 ='$cost2' , cost3 = '$cost3', cost4 = '$cost4', Port = '$cost5',Bugget = '$Bugget',ID_vat = '$type_vat',ID_faculty = '$type_vat_faculty', Status_stake = '$StatusMemRe', Time_period = '$dateperiod'";
+        $sqlResearch .= ",cost1 = '$cost1', cost2 ='$cost2' , cost3 = '$cost3', cost4 = '$cost4', Port = '$cost5',Bugget = '$Bugget',ID_vat = '$type_vat',ID_faculty = '$type_vat_faculty', Status_stake = '$StatusMemRe', Approve_status = '$Approve_Type', Time_period = '$dateperiod'";
 
         $sqlResearch .= ",Published_status = '$Published_Status', Funds_status = '$Status_Funds' WHERE Re_ID = '$Re_id_Edit'"; 
 
@@ -233,25 +261,186 @@ elseif($But_Sub == 'Update'){
 
         mysqli_query($conn,$Log_approve);
         if($Published_Status == "1"){
+            $target_dir = "uploads/";
+            $target_name_file = uniqid(). "_" . basename($_FILES["Myfile"]["name"]);  //สร้างชื่อไฟล์ใหม่ที่ไม่ซ้ำกันทำให้อัพโหลดลง server ไม่เกิดปัญหา
+            $target_file = $target_dir . $target_name_file;
+            $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));  //เช็คนามสกุลของไฟล์ว่าคือไฟล์อะไร
             // echo $type_Publishedinter;
             $sql_publish = "SELECT * FROM published WHERE Re_ID = '$Re_id_Edit'";
             $sql_publish_query = mysqli_query($conn,$sql_publish);
             if(mysqli_num_rows($sql_publish_query)>0){
-                $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
-                $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo' WHERE Re_ID = '$Re_id_Edit'";
-                $result3 = mysqli_query($conn,$sqlPublished);
+                $sql_publish_check = "SELECT * FROM pro_name WHERE Re_ID = '$Re_id_Edit'";
+                $sql_publish_check_query = mysqli_query($conn,$sql_publish_check);
+                if(mysqli_num_rows($sql_publish_check_query)==1){
+                    if ($FileType == "pdf" || $FileType == "docx"){
+                        if (move_uploaded_file($_FILES["Myfile"]["tmp_name"], $target_file)) {
+                            $sql_pro_undate = "UPDATE pro_name SET Re_ID = '$Re_id_Edit', Pname = '$target_file', pro_status = '1' WHERE Re_ID = '$Re_id_Edit'";
+                            echo $sql_pro_undate;
+                            $sql_pro_undate_query = mysqli_query($conn,$sql_pro_undate);
+                            if($sql_pro_undate_query){
+                                echo "ture";
+                            }
+                        } else {
+                            echo "<script>";
+                            echo "alert('Sorry, there was an error uploading your file.');";
+                            // echo "window.location='main.php'";
+                            echo "</script>";
+                            // exit();
+                        }
+                        $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
+                        $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo' WHERE Re_ID = '$Re_id_Edit',pro_status = '1'";
+                        $result3 = mysqli_query($conn,$sqlPublished);
+                    }
+                    elseif ($FileType != "pdf" && $FileType != "docx" && $FileType !=null){
+                        $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
+                        $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo' WHERE Re_ID = '$Re_id_Edit',pro_status = '0'";
+                        $result3 = mysqli_query($conn,$sqlPublished);
+                        echo "<script>";
+                        echo "alert('be not PDF or docx file');";
+                        // echo "window.location='edit.php'";
+                        echo "</script>";
+                        // exit();
+                    }
+                    // else{
+                    //     $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
+                    //     $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo' WHERE Re_ID = '$Re_id_Edit',pro_status = '0'";
+                    //     $result3 = mysqli_query($conn,$sqlPublished);
+                    // }
+                }
+                if(mysqli_num_rows($sql_publish_check_query)==0){
+                    if ($FileType == "pdf" || $FileType == "docx"){
+                        if (move_uploaded_file($_FILES["Myfile"]["tmp_name"], $target_file)) {
+                            $sql_pro_undate = "INSERT INTO pro_name (Re_ID,pro_status,Pname) VALUE ('$Re_id_Edit','1','$target_file')";
+                            // $sql_pro_undate = "UPDATE pro_name SET Re_ID = '$Re_id_Edit', pro_name = '$target_file', pro_status = '1'";
+                            $sql_pro_undate_query = mysqli_query($conn,$sql_pro_undate);
+                        } else {
+                            echo "<script>";
+                            echo "alert('Sorry, there was an error uploading your file.');";
+                            // echo "window.location='main.php'";
+                            echo "</script>";
+                            // exit();
+                        }
+                        $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
+                        $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo' WHERE Re_ID = '$Re_id_Edit',pro_status = '1'";
+                        $result3 = mysqli_query($conn,$sqlPublished);
+                    }
+                    elseif ($FileType != "pdf" && $FileType != "docx"){
+                        $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
+                        $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo' WHERE Re_ID = '$Re_id_Edit',pro_status = '0'";
+                        $result3 = mysqli_query($conn,$sqlPublished);
+                        echo "<script>";
+                        echo "alert('be not PDF or docx file');";
+                        // echo "window.location='edit.php'";
+                        echo "</script>";
+                        // exit();
+                    }
+                    // else{
+                    //     $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
+                    //     $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo' WHERE Re_ID = '$Re_id_Edit',pro_status = '0'";
+                    //     $result3 = mysqli_query($conn,$sqlPublished);
+                    // }
+                }
+                // $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
+                // $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo' WHERE Re_ID = '$Re_id_Edit',pro_status = '1'";
+                // $result3 = mysqli_query($conn,$sqlPublished);
+
             }
             elseif(mysqli_num_rows($sql_publish_query)==0){
-                $sqlPublished = "INSERT INTO published (TypePublished, date_published, Volume, Issue, Page, Re_ID)";
-                $sqlPublished .= " Value ('$type_Publishedinter','$datePublished','$Volome','$ISSUE','$PageNo','$Re_id_Edit')";
-                // $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
-                // $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo', Re_ID = '$Re_id_Edit'";
-                // echo $sqlPublished;
-                $result3 = mysqli_query($conn,$sqlPublished);
+                echo "asf";
+                $target_dir = "uploads/";
+                $target_name_file = uniqid(). "_" . basename($_FILES["Myfile"]["name"]);  //สร้างชื่อไฟล์ใหม่ที่ไม่ซ้ำกันทำให้อัพโหลดลง server ไม่เกิดปัญหา
+                $target_file = $target_dir . $target_name_file;
+                $FileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));  //เช็คนามสกุลของไฟล์ว่าคือไฟล์อะไร
+                $sql_publish_check = "SELECT * FROM pro_name WHERE Re_ID = '$Re_id_Edit'";
+                $sql_publish_check_query = mysqli_query($conn,$sql_publish_check);
+                if(mysqli_num_rows($sql_publish_check_query)==1){
+                    if ($FileType == "pdf" || $FileType == "docx"){
+                        if (move_uploaded_file($_FILES["Myfile"]["tmp_name"], $target_file)) {
+                            $sql_pro_undate = "UPDATE pro_name SET Re_ID = '$Re_id_Edit', pro_name = '$target_file', pro_status = '1'";
+                            $sql_pro_undate_query = mysqli_query($conn,$sql_pro_undate);
+                        } else {
+                            echo "<script>";
+                            echo "alert('Sorry, there was an error uploading your file.');";
+                            echo "window.location='main.php'";
+                            echo "</script>";
+                            // exit();
+                        }
+                        $sqlPublished = "INSERT INTO published (TypePublished, date_published, Volume, Issue, Page, Re_ID, pro_status)";
+                        $sqlPublished .= " Value ('$type_Publishedinter','$datePublished','$Volome','$ISSUE','$PageNo','$Re_id_Edit', '1')";
+                        $result3 = mysqli_query($conn,$sqlPublished);
+                    }
+                    elseif ($FileType != "pdf" && $FileType != "docx"){
+                        $sqlPublished = "INSERT INTO published (TypePublished, date_published, Volume, Issue, Page, Re_ID, pro_status)";
+                        $sqlPublished .= " Value ('$type_Publishedinter','$datePublished','$Volome','$ISSUE','$PageNo','$Re_id_Edit', '0')";
+                        $result3 = mysqli_query($conn,$sqlPublished);
+                        echo "<script>";
+                        echo "alert('be not PDF or docx file');";
+                        // echo "window.location='edit.php'";
+                        echo "</script>";
+                        // exit();
+                    }
+                    // else{
+                    //     $sqlPublished = "INSERT INTO published (TypePublished, date_published, Volume, Issue, Page, Re_ID, pro_status)";
+                    //     $sqlPublished .= " Value ('$type_Publishedinter','$datePublished','$Volome','$ISSUE','$PageNo','$Re_id_Edit', '0')";
+                    //     $result3 = mysqli_query($conn,$sqlPublished);
+                    // }
+                }
+                if(mysqli_num_rows($sql_publish_check_query)==0){
+                    if ($FileType == "pdf" || $FileType == "docx"){
+                        if (move_uploaded_file($_FILES["Myfile"]["tmp_name"], $target_file)) {
+                            $sql_pro_undate = "INSERT INTO pro_name (Re_ID,pro_status,Pname) VALUE ('$Re_id_Edit','1','$target_file')";
+                            echo $sql_pro_undate;
+                            // $sql_pro_undate = "UPDATE pro_name SET Re_ID = '$Re_id_Edit', pro_name = '$target_file', pro_status = '1'";
+                            $sql_pro_undate_query = mysqli_query($conn,$sql_pro_undate);
+                        } else {
+                            echo "<script>";
+                            echo "alert('Sorry, there was an error uploading your file.');";
+                            // echo "window.location='main.php'";
+                            echo "</script>";
+                            // exit();
+                        }
+                        $sqlPublished = "INSERT INTO published (TypePublished, date_published, Volume, Issue, Page, Re_ID, pro_status)";
+                        $sqlPublished .= " Value ('$type_Publishedinter','$datePublished','$Volome','$ISSUE','$PageNo','$Re_id_Edit', '1')";
+                        $result3 = mysqli_query($conn,$sqlPublished);
+                    }
+                    elseif ($FileType != "pdf" && $FileType != "docx"){
+                        $sqlPublished = "INSERT INTO published (TypePublished, date_published, Volume, Issue, Page, Re_ID, pro_status)";
+                        $sqlPublished .= " Value ('$type_Publishedinter','$datePublished','$Volome','$ISSUE','$PageNo','$Re_id_Edit', '0')";
+                        $result3 = mysqli_query($conn,$sqlPublished);
+                        echo "<script>";
+                        echo "alert('be not PDF or docx file');";
+                        // echo "window.location='edit.php'";
+                        echo "</script>";
+                        // exit();
+                    }
+                    // else{
+                    //     $sqlPublished = "INSERT INTO published (TypePublished, date_published, Volume, Issue, Page, Re_ID, pro_status)";
+                    //     $sqlPublished .= " Value ('$type_Publishedinter','$datePublished','$Volome','$ISSUE','$PageNo','$Re_id_Edit', '0')";
+                    //     $result3 = mysqli_query($conn,$sqlPublished);
+                    // }
+                }
+            //     $sqlPublished = "INSERT INTO published (TypePublished, date_published, Volume, Issue, Page, Re_ID, pro_status)";
+            //     $sqlPublished .= " Value ('$type_Publishedinter','$datePublished','$Volome','$ISSUE','$PageNo','$Re_id_Edit', '1')";
+            //     // $sqlPublished = "UPDATE published SET TypePublished = '$type_Publishedinter', date_published = '$datePublished'";
+            //     // $sqlPublished .=", Volume ='$Volome', Issue = '$ISSUE', Page = '$PageNo', Re_ID = '$Re_id_Edit'";
+            //     // echo $sqlPublished;
+            //     $result3 = mysqli_query($conn,$sqlPublished);
             }     
         }
         elseif($Published_Status == "2"){
-            $sqlDelete = "DELETE published WHERE Re_ID = '$Re_id_Edit'"; 
+            $sql_file = "SELECT * FROM pro_name WHERE Re_ID = '$Re_id_Edit'";
+            $file = mysqli_query($conn,$sql_file);
+            if(mysqli_num_rows($file)>0){
+                while($rowfile = mysqli_fetch_assoc($file)){
+                    $nameFile = $rowfile['Pname'];
+                }
+            }
+            if(unlink($nameFile)){
+                echo "delete seccess";
+            }
+            $sql_pro_de = "DELETE FROM pro_name WHERE Re_ID = '$Re_id_Edit'";
+            $sqlDelete = "DELETE FROM published WHERE Re_ID = '$Re_id_Edit'"; 
+            $sql_pro_de_query = mysqli_query($conn,$sql_pro_de);
             $resultDelete3 = mysqli_query($conn,$sqlDelete);
         }
     
@@ -443,9 +632,22 @@ elseif($But_Sub == 'Delete'){
     // echo $Delete_sql;
     $Delete_vat = "DELETE FROM vat WHERE Re_ID = '$Re_id_De'";
     $Delete_vat_faculty = "DELETE FROM vat_faculty WHERE Re_ID = '$Re_id_De'";
+    $DElete_pro_name = "DELETE FROM pro_name WHERE Re_ID = '$Re_id_De'";
     $Delete_query = mysqli_query($conn,$Delete_sql);
     $Delete_vat_query = mysqli_query($conn,$Delete_vat);
     $Delete_vat_faculty_query = mysqli_query($conn,$Delete_vat_faculty);
+
+    $sql_file = "SELECT * FROM pro_name WHERE Re_ID = '$Re_id_De'";
+    $file = mysqli_query($conn,$sql_file);
+    if(mysqli_num_rows($file)>0){
+        while($rowfile = mysqli_fetch_assoc($file)){
+            $nameFile = $rowfile['Pname'];
+        }
+    }
+    if(unlink($nameFile)){
+        echo "delete seccess";
+    }
+    $DElete_pro_name_query = mysqli_query($conn,$DElete_pro_name);
 
 
     echo "<script>";
