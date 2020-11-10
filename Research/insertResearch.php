@@ -246,12 +246,22 @@ elseif($But_Sub == 'Update'){
         if ($TypeRe == "Other"){
             $TypeRe = $Type_ReOther;
         }
+        
+        if($Approve_Type != null && $Approve_Type != ''){
+            $sqlResearch = "UPDATE research SET ID_Leader = '$LeaderName', NameRe_TH = '$NameRe_TH', NameRe_ENG = '$NameRe_Eng', Type_research = '$TypeRe' ";
+            $sqlResearch .= ",cost1 = '$cost1', cost2 ='$cost2' , cost3 = '$cost3', cost4 = '$cost4', Port = '$cost5',Bugget = '$Bugget',ID_vat = '$type_vat',ID_faculty = '$type_vat_faculty', Status_stake = '$StatusMemRe', Approve_status = '$Approve_Type', Time_period = '$dateperiod'";
 
-        $sqlResearch = "UPDATE research SET ID_Leader = '$LeaderName', NameRe_TH = '$NameRe_TH', NameRe_ENG = '$NameRe_Eng', Type_research = '$TypeRe' ";
-        $sqlResearch .= ",cost1 = '$cost1', cost2 ='$cost2' , cost3 = '$cost3', cost4 = '$cost4', Port = '$cost5',Bugget = '$Bugget',ID_vat = '$type_vat',ID_faculty = '$type_vat_faculty', Status_stake = '$StatusMemRe', Approve_status = '$Approve_Type', Time_period = '$dateperiod'";
-
-        $sqlResearch .= ",Published_status = '$Published_Status', Funds_status = '$Status_Funds' WHERE Re_ID = '$Re_id_Edit'"; 
-
+            $sqlResearch .= ",Published_status = '$Published_Status', Funds_status = '$Status_Funds' WHERE Re_ID = '$Re_id_Edit'"; 
+            echo $sqlResearch;
+        }
+        else{
+            $sqlResearch = "UPDATE research SET ID_Leader = '$LeaderName', NameRe_TH = '$NameRe_TH', NameRe_ENG = '$NameRe_Eng', Type_research = '$TypeRe' ";
+            $sqlResearch .= ",cost1 = '$cost1', cost2 ='$cost2' , cost3 = '$cost3', cost4 = '$cost4', Port = '$cost5',Bugget = '$Bugget',ID_vat = '$type_vat',ID_faculty = '$type_vat_faculty', Status_stake = '$StatusMemRe', Time_period = '$dateperiod'";
+    
+            $sqlResearch .= ",Published_status = '$Published_Status', Funds_status = '$Status_Funds' WHERE Re_ID = '$Re_id_Edit'"; 
+        }
+        
+        
         // echo $sqlResearch;
         // echo $type_vat;
         // echo $type_vat_faculty;
@@ -274,6 +284,16 @@ elseif($But_Sub == 'Update'){
                 if(mysqli_num_rows($sql_publish_check_query)==1){
                     if ($FileType == "pdf" || $FileType == "docx"){
                         if (move_uploaded_file($_FILES["Myfile"]["tmp_name"], $target_file)) {
+                            $sql_file = "SELECT * FROM pro_name WHERE Re_ID = '$Re_id_De'";
+                            $file = mysqli_query($conn,$sql_file);
+                            if(mysqli_num_rows($file)>0){
+                                while($rowfile = mysqli_fetch_assoc($file)){
+                                    $nameFile = $rowfile['Pname'];
+                                }
+                            }
+                            if(unlink($nameFile)){
+                                echo "delete seccess";
+                            }
                             $sql_pro_undate = "UPDATE pro_name SET Re_ID = '$Re_id_Edit', Pname = '$target_file', pro_status = '1' WHERE Re_ID = '$Re_id_Edit'";
                             echo $sql_pro_undate;
                             $sql_pro_undate_query = mysqli_query($conn,$sql_pro_undate);
@@ -355,13 +375,24 @@ elseif($But_Sub == 'Update'){
                 $sql_publish_check_query = mysqli_query($conn,$sql_publish_check);
                 if(mysqli_num_rows($sql_publish_check_query)==1){
                     if ($FileType == "pdf" || $FileType == "docx"){
+                        
                         if (move_uploaded_file($_FILES["Myfile"]["tmp_name"], $target_file)) {
+                            $sql_file = "SELECT * FROM pro_name WHERE Re_ID = '$Re_id_De'";
+                            $file = mysqli_query($conn,$sql_file);
+                            if(mysqli_num_rows($file)>0){
+                                while($rowfile = mysqli_fetch_assoc($file)){
+                                    $nameFile = $rowfile['Pname'];
+                                }
+                            }
+                            if(unlink($nameFile)){
+                                echo "delete seccess";
+                            }
                             $sql_pro_undate = "UPDATE pro_name SET Re_ID = '$Re_id_Edit', pro_name = '$target_file', pro_status = '1'";
                             $sql_pro_undate_query = mysqli_query($conn,$sql_pro_undate);
                         } else {
                             echo "<script>";
                             echo "alert('Sorry, there was an error uploading your file.');";
-                            echo "window.location='main.php'";
+                            // echo "window.location='main.php'";
                             echo "</script>";
                             // exit();
                         }
@@ -440,8 +471,11 @@ elseif($But_Sub == 'Update'){
             }
             $sql_pro_de = "DELETE FROM pro_name WHERE Re_ID = '$Re_id_Edit'";
             $sqlDelete = "DELETE FROM published WHERE Re_ID = '$Re_id_Edit'"; 
+
             $sql_pro_de_query = mysqli_query($conn,$sql_pro_de);
             $resultDelete3 = mysqli_query($conn,$sqlDelete);
+
+            // $Delete_status = "UPDATE research SET Published_status = '$'"
         }
     
         // กองทุนภายใน
